@@ -1,0 +1,94 @@
+{
+  "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+  "id": "llm-service",
+  "name": "LLM Service",
+  "version": "1.0.0",
+  "description": "AI text generation and chat completions. Compatible with OpenAI API, Anthropic, and local models via Ollama/vLLM.",
+  "author": {
+    "name": "FlowForge Team",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danstoll/forgehooks-registry",
+  "icon": "brain",
+  "category": "ai",
+  "tags": ["ai", "llm", "chat", "text-generation", "openai", "gpt", "anthropic"],
+  "image": {
+    "repository": "flowforge/llm-service",
+    "tag": "latest"
+  },
+  "port": 3006,
+  "basePath": "/api/v1/llm",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/chat",
+      "description": "Chat completion"
+    },
+    {
+      "method": "POST",
+      "path": "/generate",
+      "description": "Text generation"
+    },
+    {
+      "method": "POST",
+      "path": "/embeddings",
+      "description": "Generate embeddings"
+    },
+    {
+      "method": "GET",
+      "path": "/models",
+      "description": "List available models"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+  "environment": [
+    {
+      "name": "OPENAI_API_KEY",
+      "description": "OpenAI API key",
+      "required": false,
+      "secret": true
+    },
+    {
+      "name": "ANTHROPIC_API_KEY",
+      "description": "Anthropic API key",
+      "required": false,
+      "secret": true
+    },
+    {
+      "name": "OPENAI_API_BASE",
+      "description": "Custom OpenAI API base URL (for Ollama, vLLM, etc.)",
+      "required": false
+    },
+    {
+      "name": "DEFAULT_MODEL",
+      "description": "Default model to use",
+      "required": false,
+      "default": "gpt-4o-mini"
+    },
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    }
+  ],
+  "resources": {
+    "memory": "1g",
+    "cpu": "1.0"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "dependencies": {
+    "services": ["redis"]
+  }
+}

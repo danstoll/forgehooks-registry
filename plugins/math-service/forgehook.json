@@ -1,0 +1,112 @@
+{
+  "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+  "id": "math-service",
+  "name": "Math Service",
+  "version": "1.0.0",
+  "description": "Advanced mathematical operations including arithmetic, statistics, matrix operations, equation solving, and numerical analysis.",
+  "author": {
+    "name": "FlowForge Team",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danstoll/forgehooks-registry",
+  "icon": "calculator",
+  "category": "data",
+  "tags": ["math", "statistics", "matrix", "algebra", "numerical", "calculations"],
+  "image": {
+    "repository": "flowforge/math-service",
+    "tag": "latest"
+  },
+  "port": 3002,
+  "basePath": "/api/v1/math",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/calculate",
+      "description": "Evaluate mathematical expressions",
+      "requestBody": {
+        "expression": "2 + 2 * 3",
+        "variables": { "x": 5 }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/statistics",
+      "description": "Calculate statistics (mean, median, std, variance, etc.)",
+      "requestBody": {
+        "data": [1, 2, 3, 4, 5],
+        "operations": ["mean", "std", "median"]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/matrix",
+      "description": "Matrix operations (multiply, inverse, determinant, etc.)",
+      "requestBody": {
+        "operation": "multiply",
+        "matrix_a": [[1, 2], [3, 4]],
+        "matrix_b": [[5, 6], [7, 8]]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/solve",
+      "description": "Solve equations and systems of equations",
+      "requestBody": {
+        "equations": ["x + y = 10", "2x - y = 5"]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/derivative",
+      "description": "Calculate symbolic derivatives",
+      "requestBody": {
+        "expression": "x^2 + 3*x + 2",
+        "variable": "x"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/integral",
+      "description": "Calculate definite or indefinite integrals",
+      "requestBody": {
+        "expression": "x^2",
+        "variable": "x",
+        "bounds": [0, 1]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+  "environment": [
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    },
+    {
+      "name": "MAX_COMPUTATION_TIME",
+      "description": "Maximum computation time in seconds",
+      "required": false,
+      "default": "30"
+    }
+  ],
+  "resources": {
+    "memory": "512m",
+    "cpu": "1.0"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "dependencies": {
+    "services": ["redis"]
+  }
+}

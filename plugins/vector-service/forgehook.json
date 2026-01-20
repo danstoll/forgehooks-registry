@@ -1,0 +1,82 @@
+{
+  "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+  "id": "vector-service",
+  "name": "Vector Service",
+  "version": "1.0.0",
+  "description": "Vector database operations for semantic search, RAG, and embeddings storage using Qdrant.",
+  "author": {
+    "name": "FlowForge Team",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danstoll/forgehooks-registry",
+  "icon": "database",
+  "category": "data",
+  "tags": ["vectors", "embeddings", "semantic-search", "qdrant", "rag"],
+  "image": {
+    "repository": "flowforge/vector-service",
+    "tag": "latest"
+  },
+  "port": 3007,
+  "basePath": "/api/v1/vector",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/collections",
+      "description": "Create collection"
+    },
+    {
+      "method": "GET",
+      "path": "/collections",
+      "description": "List collections"
+    },
+    {
+      "method": "DELETE",
+      "path": "/collections/{name}",
+      "description": "Delete collection"
+    },
+    {
+      "method": "POST",
+      "path": "/upsert",
+      "description": "Upsert vectors"
+    },
+    {
+      "method": "POST",
+      "path": "/search",
+      "description": "Search vectors"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+  "environment": [
+    {
+      "name": "QDRANT_URL",
+      "description": "Qdrant server URL",
+      "required": false,
+      "default": "http://qdrant:6333"
+    },
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    }
+  ],
+  "resources": {
+    "memory": "512m",
+    "cpu": "1.0"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "dependencies": {
+    "services": ["redis", "qdrant"]
+  }
+}

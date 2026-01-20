@@ -1,0 +1,76 @@
+{
+  "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+  "id": "crypto-service",
+  "name": "Crypto Service",
+  "version": "1.0.0",
+  "description": "Cryptographic operations including hashing, encryption, and JWT token management. Supports SHA, bcrypt, argon2, AES-256-GCM encryption.",
+  "author": {
+    "name": "FlowForge Team",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danstoll/forgehooks-registry",
+  "icon": "lock",
+  "category": "security",
+  "tags": ["encryption", "hashing", "jwt", "bcrypt", "security", "cryptography", "aes"],
+  "image": {
+    "repository": "flowforge/crypto-service",
+    "tag": "latest"
+  },
+  "port": 3001,
+  "basePath": "/api/v1/crypto",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/hash",
+      "description": "Hash data using SHA, bcrypt, or argon2"
+    },
+    {
+      "method": "POST",
+      "path": "/encrypt",
+      "description": "Encrypt data using AES-256-GCM"
+    },
+    {
+      "method": "POST",
+      "path": "/decrypt",
+      "description": "Decrypt AES encrypted data"
+    },
+    {
+      "method": "POST",
+      "path": "/jwt/generate",
+      "description": "Generate JWT token"
+    },
+    {
+      "method": "POST",
+      "path": "/jwt/verify",
+      "description": "Verify JWT token"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+  "environment": [
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    }
+  ],
+  "resources": {
+    "memory": "256m",
+    "cpu": "0.5"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "dependencies": {
+    "services": ["redis"]
+  }
+}

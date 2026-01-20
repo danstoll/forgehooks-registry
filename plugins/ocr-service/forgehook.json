@@ -1,0 +1,72 @@
+{
+  "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+  "id": "ocr-service",
+  "name": "OCR Service",
+  "version": "1.0.0",
+  "description": "Optical character recognition for extracting text from images. Supports multiple languages and document layouts.",
+  "author": {
+    "name": "FlowForge Team",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danstoll/forgehooks-registry",
+  "icon": "scan",
+  "category": "ai",
+  "tags": ["ocr", "text-extraction", "image-processing", "ai", "tesseract"],
+  "image": {
+    "repository": "flowforge/ocr-service",
+    "tag": "latest"
+  },
+  "port": 3004,
+  "basePath": "/api/v1/ocr",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/extract",
+      "description": "Extract text from image"
+    },
+    {
+      "method": "POST",
+      "path": "/extract-structured",
+      "description": "Extract text with bounding boxes and confidence scores"
+    },
+    {
+      "method": "GET",
+      "path": "/languages",
+      "description": "List supported languages"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+  "environment": [
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    },
+    {
+      "name": "DEFAULT_LANGUAGE",
+      "description": "Default OCR language",
+      "required": false,
+      "default": "eng"
+    }
+  ],
+  "resources": {
+    "memory": "2g",
+    "cpu": "2.0"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "dependencies": {
+    "services": ["redis"]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+  "id": "image-service",
+  "name": "Image Service",
+  "version": "1.0.0",
+  "description": "Image processing including resize, convert, optimize, crop, and format transformations using Sharp.",
+  "author": {
+    "name": "FlowForge Team",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danstoll/forgehooks-registry",
+  "icon": "image",
+  "category": "media",
+  "tags": ["image", "resize", "optimization", "conversion", "sharp", "webp"],
+  "image": {
+    "repository": "flowforge/image-service",
+    "tag": "latest"
+  },
+  "port": 3005,
+  "basePath": "/api/v1/image",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/resize",
+      "description": "Resize image"
+    },
+    {
+      "method": "POST",
+      "path": "/convert",
+      "description": "Convert image format"
+    },
+    {
+      "method": "POST",
+      "path": "/optimize",
+      "description": "Optimize image for web"
+    },
+    {
+      "method": "POST",
+      "path": "/crop",
+      "description": "Crop image"
+    },
+    {
+      "method": "POST",
+      "path": "/thumbnail",
+      "description": "Generate thumbnail"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+  "environment": [
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    },
+    {
+      "name": "MAX_FILE_SIZE_MB",
+      "description": "Maximum file size in MB",
+      "required": false,
+      "default": "25"
+    }
+  ],
+  "resources": {
+    "memory": "512m",
+    "cpu": "1.0"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "dependencies": {
+    "services": ["redis"]
+  }
+}

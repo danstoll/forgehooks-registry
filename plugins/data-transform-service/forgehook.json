@@ -1,0 +1,92 @@
+{
+  "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+  "id": "data-transform-service",
+  "name": "Data Transform Service",
+  "version": "1.0.0",
+  "description": "Data format conversions between JSON, CSV, XML, YAML, and more. Supports JSONPath queries and data validation.",
+  "author": {
+    "name": "FlowForge Team",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danstoll/forgehooks-registry",
+  "icon": "repeat",
+  "category": "data",
+  "tags": ["data", "transform", "json", "csv", "xml", "yaml", "conversion"],
+  "image": {
+    "repository": "flowforge/data-transform-service",
+    "tag": "latest"
+  },
+  "port": 3008,
+  "basePath": "/api/v1/transform",
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/json-to-csv",
+      "description": "Convert JSON to CSV"
+    },
+    {
+      "method": "POST",
+      "path": "/csv-to-json",
+      "description": "Convert CSV to JSON"
+    },
+    {
+      "method": "POST",
+      "path": "/xml-to-json",
+      "description": "Convert XML to JSON"
+    },
+    {
+      "method": "POST",
+      "path": "/json-to-xml",
+      "description": "Convert JSON to XML"
+    },
+    {
+      "method": "POST",
+      "path": "/yaml-to-json",
+      "description": "Convert YAML to JSON"
+    },
+    {
+      "method": "POST",
+      "path": "/json-to-yaml",
+      "description": "Convert JSON to YAML"
+    },
+    {
+      "method": "POST",
+      "path": "/jsonpath",
+      "description": "Query JSON with JSONPath"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+  "environment": [
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    },
+    {
+      "name": "MAX_PAYLOAD_SIZE_MB",
+      "description": "Maximum payload size in MB",
+      "required": false,
+      "default": "10"
+    }
+  ],
+  "resources": {
+    "memory": "256m",
+    "cpu": "0.5"
+  },
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+  "dependencies": {
+    "services": ["redis"]
+  }
+}
