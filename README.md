@@ -4,38 +4,42 @@ Official registry of ForgeHook plugins for [FlowForge](https://github.com/dansto
 
 ## 🔌 Available Plugins
 
-| Plugin | Category | Description |
-|--------|----------|-------------|
-| [crypto-service](./plugins/crypto-service/) | Security | Cryptographic operations - hashing, encryption, JWT |
-| [math-service](./plugins/math-service/) | Utility | Mathematical calculations and statistics |
-| [pdf-service](./plugins/pdf-service/) | Media | PDF generation, merging, splitting |
-| [ocr-service](./plugins/ocr-service/) | AI | Optical character recognition |
-| [image-service](./plugins/image-service/) | Media | Image processing and optimization |
-| [llm-service](./plugins/llm-service/) | AI | LLM chat and text generation |
-| [vector-service](./plugins/vector-service/) | Data | Vector database for semantic search |
-| [data-transform-service](./plugins/data-transform-service/) | Data | Data format conversions |
+| Plugin                                                       | Category | Description                                         |
+| ------------------------------------------------------------ | -------- | --------------------------------------------------- |
+| [crypto-service](./plugins/crypto-service/)                  | Security | Cryptographic operations - hashing, encryption, JWT |
+| [math-service](./plugins/math-service/)                      | Utility  | Mathematical calculations and statistics            |
+| [pdf-service](./plugins/pdf-service/)                        | Media    | PDF generation, merging, splitting                  |
+| [ocr-service](./plugins/ocr-service/)                        | AI       | Optical character recognition                       |
+| [image-service](./plugins/image-service/)                    | Media    | Image processing and optimization                   |
+| [llm-service](./plugins/llm-service/)                        | AI       | LLM chat and text generation                        |
+| [vector-service](./plugins/vector-service/)                  | Data     | Vector database for semantic search                 |
+| [data-transform-service](./plugins/data-transform-service/)  | Data     | Data format conversions                             |
 
 ## 📦 Installation Methods
 
 ### From Marketplace (Recommended)
+
 The FlowForge UI automatically fetches plugins from this registry.
 
 ### From GitHub URL
-```
+
+```text
 flowforge/crypto-service
 ```
 
 ### Offline (.fhk Package)
+
 Pre-built packages are available in the `packages/` directory:
 
-| Package | Size | Description |
-|---------|------|-------------|
-| `crypto-service-1.0.0.fhk` | 200 MB | Cryptographic operations |
-| `math-service-1.0.0.fhk` | 282 MB | Mathematical calculations |
-| `llm-service-1.0.0.fhk` | 4.2 GB | LLM/AI text generation |
-| `vector-service-1.0.0.fhk` | 4.2 GB | Vector database/semantic search |
+| Package                      | Size   | Description                      |
+| ---------------------------- | ------ | -------------------------------- |
+| `crypto-service-1.0.0.fhk`   | 200 MB | Cryptographic operations         |
+| `math-service-1.0.0.fhk`     | 282 MB | Mathematical calculations        |
+| `llm-service-1.0.0.fhk`      | 4.2 GB | LLM/AI text generation           |
+| `vector-service-1.0.0.fhk`   | 4.2 GB | Vector database/semantic search  |
 
 To install a .fhk package:
+
 1. Go to **Marketplace** → **Upload** tab
 2. Drag and drop the .fhk file or click to browse
 3. Click **Install**
@@ -47,6 +51,7 @@ See [Creating ForgeHooks](./docs/creating-forgehooks.md) for a complete guide.
 ### Quick Start
 
 1. Create `forgehook.json` manifest:
+
 ```json
 {
   "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
@@ -69,8 +74,8 @@ See [Creating ForgeHooks](./docs/creating-forgehooks.md) for a complete guide.
 }
 ```
 
-2. Build and push Docker image
-3. Add to a registry or install directly from GitHub
+1. Build and push Docker image
+2. Add to a registry or install directly from GitHub
 
 ## 📋 Registry Format
 
