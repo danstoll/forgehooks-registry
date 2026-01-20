@@ -1,160 +1,468 @@
 {
-  "$schema": "../../forgehook-schema.json",
+  "$schema": "../forgehook-schema.json",
   "id": "data-transform-service",
   "name": "Data Transform Service",
   "version": "1.0.0",
-  "description": "Data transformation operations including JSON manipulation, CSV parsing, XML conversion, format mapping, and data validation",
+  "description": "Comprehensive data transformation operations including JSON manipulation (JSONPath, JMESPath), CSV parsing/generation, XML conversion, JSON Schema validation, object flattening/unflattening, deep merging, and template rendering. Pure JavaScript - no external dependencies.",
   "author": {
     "name": "FlowForge",
     "url": "https://flowforge.dev"
   },
   "license": "MIT",
-  "repository": "https://github.com/flowforge/data-transform-service",
+  "repository": "https://github.com/flowforge/forgehooks-registry",
   "icon": "repeat",
   "category": "data",
-  "tags": ["transform", "json", "csv", "xml", "mapping", "validation", "conversion"],
+  "tags": ["transform", "json", "csv", "xml", "yaml", "mapping", "validation", "jsonpath", "conversion", "parse"],
   
-  "image": {
-    "repository": "flowforge/data-transform-service",
-    "tag": "1.0.0"
+  "runtime": "embedded",
+  "embedded": {
+    "entrypoint": "index.js",
+    "sandbox": true
   },
   
-  "port": 4008,
-  "basePath": "/api/v1/transform",
-  
-  "healthCheck": {
-    "path": "/health",
-    "interval": 30,
-    "timeout": 10,
-    "retries": 3
-  },
-  
-  "endpoints": [
+  "exports": [
     {
-      "method": "POST",
-      "path": "/json/query",
-      "description": "Query JSON data using JSONPath or JMESPath",
-      "requestBody": {
-        "data": { "users": [{ "name": "John" }] },
-        "query": "$.users[0].name",
-        "engine": "jsonpath"
-      }
+      "name": "jsonQuery",
+      "description": "Query JSON data using JSONPath expression",
+      "parameters": {
+        "data": { "type": "any", "required": true, "description": "JSON data to query" },
+        "query": { "type": "string", "required": true, "description": "JSONPath expression (e.g., $.users[*].name)" }
+      },
+      "returns": { "type": "any", "description": "Query results" },
+      "example": "jsonQuery({ users: [{ name: 'John' }] }, '$.users[0].name')"
     },
     {
-      "method": "POST",
-      "path": "/json/transform",
-      "description": "Transform JSON using a mapping template",
-      "requestBody": {
-        "data": { "firstName": "John", "lastName": "Doe" },
-        "template": { "fullName": "{{firstName}} {{lastName}}" }
-      }
+      "name": "jsonTransform",
+      "description": "Transform JSON using a mapping template with {{path}} placeholders",
+      "parameters": {
+        "data": { "type": "object", "required": true, "description": "Source data" },
+        "template": { "type": "object", "required": true, "description": "Template with {{path}} placeholders" }
+      },
+      "returns": { "type": "object", "description": "Transformed object" },
+      "example": "jsonTransform({ first: 'John', last: 'Doe' }, { fullName: '{{first}} {{last}}' })"
     },
     {
-      "method": "POST",
-      "path": "/csv/parse",
-      "description": "Parse CSV to JSON",
-      "requestBody": {
-        "data": "name,age\nJohn,30\nJane,25",
-        "options": { "header": true }
-      }
+      "name": "csvParse",
+      "description": "Parse CSV string to array of objects",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "CSV string" },
+        "options": { "type": "object", "description": "{ delimiter, header, skipEmpty, trim }" }
+      },
+      "returns": { "type": "array", "description": "Array of objects (if header) or arrays" },
+      "example": "csvParse('name,age\\nJohn,30', { header: true })"
     },
     {
-      "method": "POST",
-      "path": "/csv/generate",
-      "description": "Generate CSV from JSON",
-      "requestBody": {
-        "data": [{ "name": "John", "age": 30 }],
-        "options": { "header": true }
-      }
+      "name": "csvGenerate",
+      "description": "Generate CSV string from array of objects",
+      "parameters": {
+        "data": { "type": "array", "required": true, "description": "Array of objects" },
+        "options": { "type": "object", "description": "{ delimiter, header, columns }" }
+      },
+      "returns": { "type": "string", "description": "CSV string" },
+      "example": "csvGenerate([{ name: 'John', age: 30 }], { header: true })"
     },
     {
-      "method": "POST",
-      "path": "/xml/parse",
-      "description": "Parse XML to JSON",
-      "requestBody": {
-        "data": "<root><item>value</item></root>"
-      }
+      "name": "xmlParse",
+      "description": "Parse XML string to JSON object",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "XML string" },
+        "options": { "type": "object", "description": "{ preserveAttributes, attributePrefix }" }
+      },
+      "returns": { "type": "object", "description": "JSON representation of XML" },
+      "example": "xmlParse('<root><item>value</item></root>')"
     },
     {
-      "method": "POST",
-      "path": "/xml/generate",
-      "description": "Generate XML from JSON",
-      "requestBody": {
-        "data": { "root": { "item": "value" } }
-      }
+      "name": "xmlGenerate",
+      "description": "Generate XML string from JSON object",
+      "parameters": {
+        "data": { "type": "object", "required": true, "description": "JSON object" },
+        "options": { "type": "object", "description": "{ rootName, declaration, indent }" }
+      },
+      "returns": { "type": "string", "description": "XML string" },
+      "example": "xmlGenerate({ item: 'value' }, { rootName: 'root' })"
     },
     {
-      "method": "POST",
-      "path": "/validate",
+      "name": "yamlParse",
+      "description": "Parse YAML string to JSON object",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "YAML string" }
+      },
+      "returns": { "type": "any", "description": "Parsed JSON" }
+    },
+    {
+      "name": "yamlGenerate",
+      "description": "Generate YAML string from JSON object",
+      "parameters": {
+        "data": { "type": "any", "required": true, "description": "JSON data" },
+        "options": { "type": "object", "description": "{ indent }" }
+      },
+      "returns": { "type": "string", "description": "YAML string" }
+    },
+    {
+      "name": "validate",
       "description": "Validate data against a JSON Schema",
-      "requestBody": {
-        "data": { "name": "John", "age": 30 },
-        "schema": {
-          "type": "object",
-          "required": ["name"],
-          "properties": {
-            "name": { "type": "string" },
-            "age": { "type": "integer" }
-          }
-        }
-      }
+      "parameters": {
+        "data": { "type": "any", "required": true, "description": "Data to validate" },
+        "schema": { "type": "object", "required": true, "description": "JSON Schema" }
+      },
+      "returns": { "type": "object", "description": "{ valid, errors }" },
+      "example": "validate({ name: 'John' }, { type: 'object', required: ['name'] })"
     },
     {
-      "method": "POST",
-      "path": "/flatten",
-      "description": "Flatten nested JSON to dot notation",
-      "requestBody": {
-        "data": { "user": { "name": "John" } }
-      }
+      "name": "flatten",
+      "description": "Flatten nested object to dot notation",
+      "parameters": {
+        "data": { "type": "object", "required": true, "description": "Nested object" },
+        "delimiter": { "type": "string", "default": ".", "description": "Path delimiter" },
+        "maxDepth": { "type": "number", "description": "Maximum depth to flatten" }
+      },
+      "returns": { "type": "object", "description": "Flattened object" },
+      "example": "flatten({ user: { name: 'John' } }) // { 'user.name': 'John' }"
     },
     {
-      "method": "POST",
-      "path": "/unflatten",
-      "description": "Unflatten dot notation to nested JSON",
-      "requestBody": {
-        "data": { "user.name": "John" }
-      }
+      "name": "unflatten",
+      "description": "Unflatten dot notation to nested object",
+      "parameters": {
+        "data": { "type": "object", "required": true, "description": "Flattened object" },
+        "delimiter": { "type": "string", "default": "." }
+      },
+      "returns": { "type": "object", "description": "Nested object" },
+      "example": "unflatten({ 'user.name': 'John' }) // { user: { name: 'John' } }"
     },
     {
-      "method": "POST",
-      "path": "/merge",
-      "description": "Deep merge multiple JSON objects",
-      "requestBody": {
-        "objects": [
-          { "a": 1, "b": 2 },
-          { "b": 3, "c": 4 }
-        ]
-      }
+      "name": "merge",
+      "description": "Deep merge multiple objects",
+      "parameters": {
+        "objects": { "type": "array", "required": true, "description": "Array of objects to merge" },
+        "options": { "type": "object", "description": "{ arrayMerge: 'replace'|'concat'|'union' }" }
+      },
+      "returns": { "type": "object", "description": "Merged object" },
+      "example": "merge([{ a: 1 }, { b: 2 }, { a: 3 }]) // { a: 3, b: 2 }"
     },
     {
-      "method": "GET",
-      "path": "/health",
-      "description": "Health check endpoint",
-      "authentication": false
+      "name": "pick",
+      "description": "Pick specific keys from an object",
+      "parameters": {
+        "data": { "type": "object", "required": true },
+        "keys": { "type": "array", "required": true, "description": "Keys to pick" }
+      },
+      "returns": { "type": "object", "description": "Object with picked keys" },
+      "example": "pick({ a: 1, b: 2, c: 3 }, ['a', 'c']) // { a: 1, c: 3 }"
+    },
+    {
+      "name": "omit",
+      "description": "Omit specific keys from an object",
+      "parameters": {
+        "data": { "type": "object", "required": true },
+        "keys": { "type": "array", "required": true, "description": "Keys to omit" }
+      },
+      "returns": { "type": "object", "description": "Object without omitted keys" },
+      "example": "omit({ a: 1, b: 2, c: 3 }, ['b']) // { a: 1, c: 3 }"
+    },
+    {
+      "name": "get",
+      "description": "Get value at path with optional default",
+      "parameters": {
+        "data": { "type": "any", "required": true },
+        "path": { "type": "string", "required": true, "description": "Dot notation path" },
+        "defaultValue": { "type": "any", "description": "Default if path not found" }
+      },
+      "returns": { "type": "any", "description": "Value at path" },
+      "example": "get({ user: { name: 'John' } }, 'user.name') // 'John'"
+    },
+    {
+      "name": "set",
+      "description": "Set value at path (creates intermediate objects)",
+      "parameters": {
+        "data": { "type": "object", "required": true },
+        "path": { "type": "string", "required": true },
+        "value": { "type": "any", "required": true }
+      },
+      "returns": { "type": "object", "description": "Modified object" },
+      "example": "set({}, 'user.name', 'John') // { user: { name: 'John' } }"
+    },
+    {
+      "name": "groupBy",
+      "description": "Group array of objects by a key",
+      "parameters": {
+        "data": { "type": "array", "required": true },
+        "key": { "type": "string", "required": true, "description": "Key to group by" }
+      },
+      "returns": { "type": "object", "description": "Grouped object" },
+      "example": "groupBy([{ type: 'a', v: 1 }, { type: 'b', v: 2 }], 'type')"
+    },
+    {
+      "name": "sortBy",
+      "description": "Sort array of objects by key(s)",
+      "parameters": {
+        "data": { "type": "array", "required": true },
+        "keys": { "type": "array", "required": true, "description": "Keys to sort by (prefix with - for descending)" }
+      },
+      "returns": { "type": "array", "description": "Sorted array" },
+      "example": "sortBy([{ name: 'B' }, { name: 'A' }], ['name'])"
+    },
+    {
+      "name": "unique",
+      "description": "Get unique values from array",
+      "parameters": {
+        "data": { "type": "array", "required": true },
+        "key": { "type": "string", "description": "Key for object uniqueness" }
+      },
+      "returns": { "type": "array", "description": "Array of unique values" },
+      "example": "unique([1, 2, 2, 3]) // [1, 2, 3]"
+    },
+    {
+      "name": "mapKeys",
+      "description": "Rename object keys using a mapping",
+      "parameters": {
+        "data": { "type": "object", "required": true },
+        "mapping": { "type": "object", "required": true, "description": "{ oldKey: 'newKey' }" }
+      },
+      "returns": { "type": "object", "description": "Object with renamed keys" },
+      "example": "mapKeys({ firstName: 'John' }, { firstName: 'first_name' })"
+    },
+    {
+      "name": "mapValues",
+      "description": "Transform object values using functions",
+      "parameters": {
+        "data": { "type": "object", "required": true },
+        "transforms": { "type": "object", "required": true, "description": "{ key: 'transformName' }" }
+      },
+      "returns": { "type": "object", "description": "Object with transformed values" }
+    },
+    {
+      "name": "template",
+      "description": "Render a template string with data",
+      "parameters": {
+        "templateStr": { "type": "string", "required": true, "description": "Template with {{variable}} placeholders" },
+        "data": { "type": "object", "required": true, "description": "Data for interpolation" }
+      },
+      "returns": { "type": "string", "description": "Rendered string" },
+      "example": "template('Hello {{name}}!', { name: 'World' })"
+    },
+    {
+      "name": "diff",
+      "description": "Calculate differences between two objects",
+      "parameters": {
+        "original": { "type": "object", "required": true },
+        "modified": { "type": "object", "required": true }
+      },
+      "returns": { "type": "object", "description": "{ added, removed, changed }" }
+    },
+    {
+      "name": "clone",
+      "description": "Deep clone an object",
+      "parameters": {
+        "data": { "type": "any", "required": true }
+      },
+      "returns": { "type": "any", "description": "Cloned object" }
+    },
+    {
+      "name": "urlEncode",
+      "description": "URL encode a string",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "URL encoded string" },
+      "example": "urlEncode('hello world') // 'hello%20world'"
+    },
+    {
+      "name": "urlDecode",
+      "description": "URL decode a string",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "URL decoded string" }
+    },
+    {
+      "name": "queryStringParse",
+      "description": "Parse URL query string to object",
+      "parameters": {
+        "queryString": { "type": "string", "required": true, "description": "Query string (with or without leading ?)" }
+      },
+      "returns": { "type": "object", "description": "Parsed key-value pairs" },
+      "example": "queryStringParse('name=John&age=30') // { name: 'John', age: '30' }"
+    },
+    {
+      "name": "queryStringStringify",
+      "description": "Convert object to URL query string",
+      "parameters": {
+        "data": { "type": "object", "required": true }
+      },
+      "returns": { "type": "string", "description": "Query string" },
+      "example": "queryStringStringify({ name: 'John', age: 30 }) // 'name=John&age=30'"
+    },
+    {
+      "name": "htmlEncode",
+      "description": "Encode HTML entities in a string",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "HTML encoded string" },
+      "example": "htmlEncode('<div>') // '&lt;div&gt;'"
+    },
+    {
+      "name": "htmlDecode",
+      "description": "Decode HTML entities in a string",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "HTML decoded string" }
+    },
+    {
+      "name": "camelCase",
+      "description": "Convert string to camelCase",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "camelCase string" },
+      "example": "camelCase('hello-world') // 'helloWorld'"
+    },
+    {
+      "name": "snakeCase",
+      "description": "Convert string to snake_case",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "snake_case string" },
+      "example": "snakeCase('helloWorld') // 'hello_world'"
+    },
+    {
+      "name": "kebabCase",
+      "description": "Convert string to kebab-case",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "kebab-case string" }
+    },
+    {
+      "name": "pascalCase",
+      "description": "Convert string to PascalCase",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "PascalCase string" }
+    },
+    {
+      "name": "slugify",
+      "description": "Convert string to URL-safe slug",
+      "parameters": {
+        "data": { "type": "string", "required": true },
+        "options": { "type": "object", "description": "{ separator, lower }" }
+      },
+      "returns": { "type": "string", "description": "URL-safe slug" },
+      "example": "slugify('Hello World!') // 'hello-world'"
+    },
+    {
+      "name": "truncate",
+      "description": "Truncate string to specified length with ellipsis",
+      "parameters": {
+        "data": { "type": "string", "required": true },
+        "length": { "type": "number", "required": true, "description": "Maximum length" },
+        "suffix": { "type": "string", "default": "...", "description": "Suffix to append" }
+      },
+      "returns": { "type": "string", "description": "Truncated string" }
+    },
+    {
+      "name": "chunk",
+      "description": "Split array into chunks of specified size",
+      "parameters": {
+        "data": { "type": "array", "required": true },
+        "size": { "type": "number", "required": true, "description": "Chunk size" }
+      },
+      "returns": { "type": "array", "description": "Array of chunks" },
+      "example": "chunk([1, 2, 3, 4, 5], 2) // [[1, 2], [3, 4], [5]]"
+    },
+    {
+      "name": "compact",
+      "description": "Remove falsy values from array",
+      "parameters": {
+        "data": { "type": "array", "required": true }
+      },
+      "returns": { "type": "array", "description": "Array without falsy values" },
+      "example": "compact([0, 1, false, 2, '', 3]) // [1, 2, 3]"
+    },
+    {
+      "name": "keyBy",
+      "description": "Create object from array, keyed by specified property",
+      "parameters": {
+        "data": { "type": "array", "required": true },
+        "key": { "type": "string", "required": true, "description": "Property to use as key" }
+      },
+      "returns": { "type": "object", "description": "Object keyed by property" },
+      "example": "keyBy([{ id: 'a', v: 1 }, { id: 'b', v: 2 }], 'id') // { a: {...}, b: {...} }"
+    },
+    {
+      "name": "zip",
+      "description": "Combine multiple arrays into array of tuples",
+      "parameters": {
+        "arrays": { "type": "array", "required": true, "description": "Arrays to zip" }
+      },
+      "returns": { "type": "array", "description": "Array of tuples" },
+      "example": "zip([[1, 2], ['a', 'b']]) // [[1, 'a'], [2, 'b']]"
+    },
+    {
+      "name": "unzip",
+      "description": "Separate array of tuples into multiple arrays",
+      "parameters": {
+        "data": { "type": "array", "required": true, "description": "Array of tuples" }
+      },
+      "returns": { "type": "array", "description": "Separated arrays" }
+    },
+    {
+      "name": "intersection",
+      "description": "Get common elements between arrays",
+      "parameters": {
+        "arrays": { "type": "array", "required": true, "description": "Arrays to intersect" }
+      },
+      "returns": { "type": "array", "description": "Array of common elements" },
+      "example": "intersection([[1, 2, 3], [2, 3, 4]]) // [2, 3]"
+    },
+    {
+      "name": "difference",
+      "description": "Get elements in first array not in others",
+      "parameters": {
+        "arrays": { "type": "array", "required": true, "description": "[baseArray, ...excludeArrays]" }
+      },
+      "returns": { "type": "array", "description": "Array of different elements" },
+      "example": "difference([[1, 2, 3], [2, 3]]) // [1]"
+    },
+    {
+      "name": "union",
+      "description": "Get unique elements from all arrays",
+      "parameters": {
+        "arrays": { "type": "array", "required": true, "description": "Arrays to union" }
+      },
+      "returns": { "type": "array", "description": "Array of unique elements" },
+      "example": "union([[1, 2], [2, 3]]) // [1, 2, 3]"
+    },
+    {
+      "name": "deepEqual",
+      "description": "Deep equality comparison of two values",
+      "parameters": {
+        "a": { "type": "any", "required": true },
+        "b": { "type": "any", "required": true }
+      },
+      "returns": { "type": "boolean", "description": "True if deeply equal" },
+      "example": "deepEqual({ a: [1, 2] }, { a: [1, 2] }) // true"
     }
   ],
-  
-  "environment": [
-    {
-      "name": "LOG_LEVEL",
-      "description": "Logging verbosity level",
-      "default": "info",
-      "required": false
+
+  "config": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "csvDelimiter": { "type": "string", "default": "," },
+        "xmlIndent": { "type": "integer", "default": 2 },
+        "yamlIndent": { "type": "integer", "default": 2 },
+        "maxDepth": { "type": "integer", "default": 100 }
+      }
     },
-    {
-      "name": "MAX_PAYLOAD_SIZE",
-      "description": "Maximum payload size in MB",
-      "default": "10",
-      "required": false
+    "defaults": {
+      "csvDelimiter": ",",
+      "xmlIndent": 2,
+      "yamlIndent": 2,
+      "maxDepth": 100
     }
-  ],
-  
-  "dependencies": {
-    "services": ["redis"]
-  },
-  
-  "resources": {
-    "memory": "256m",
-    "cpu": "0.5"
   }
 }

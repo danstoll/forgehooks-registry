@@ -3,128 +3,397 @@
   "id": "crypto-service",
   "name": "Crypto Service",
   "version": "1.0.0",
-  "description": "Cryptographic operations including hashing, encryption, and JWT token management. Supports SHA, bcrypt, argon2, AES-256-GCM encryption, and full JWT lifecycle.",
+  "description": "Comprehensive cryptographic operations including hashing (SHA, MD5), symmetric encryption (AES-256-GCM/CBC), JWT token management, HMAC signatures, and secure random generation. Zero external dependencies - uses Node.js built-in crypto module.",
   "author": {
     "name": "FlowForge",
     "url": "https://flowforge.dev"
   },
   "license": "MIT",
-  "repository": "https://github.com/flowforge/crypto-service",
+  "repository": "https://github.com/flowforge/forgehooks-registry",
   "icon": "lock",
   "category": "security",
-  "tags": ["encryption", "hashing", "jwt", "bcrypt", "argon2", "aes", "security"],
+  "tags": ["encryption", "hashing", "jwt", "hmac", "aes", "security", "sha256", "sha512", "md5", "base64", "uuid"],
   
-  "image": {
-    "repository": "flowforge/crypto-service",
-    "tag": "1.0.0"
+  "runtime": "embedded",
+  "embedded": {
+    "entrypoint": "index.js",
+    "sandbox": true
   },
   
-  "port": 4001,
-  "basePath": "/api/v1/crypto",
-  
-  "healthCheck": {
-    "path": "/health",
-    "interval": 30,
-    "timeout": 10,
-    "retries": 3
-  },
-  
-  "endpoints": [
+  "exports": [
     {
-      "method": "POST",
-      "path": "/hash",
-      "description": "Hash data using SHA-256, SHA-512, bcrypt, or argon2",
-      "requestBody": {
-        "data": "hello world",
-        "algorithm": "sha256"
-      }
+      "name": "hash",
+      "description": "Hash data using SHA-1, SHA-256, SHA-512, or MD5",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "Data to hash" },
+        "algorithm": { "type": "string", "default": "sha256", "enum": ["sha1", "sha256", "sha512", "md5"], "description": "Hash algorithm" },
+        "encoding": { "type": "string", "default": "hex", "enum": ["hex", "base64"], "description": "Output encoding" }
+      },
+      "returns": { "type": "string", "description": "Hash digest" },
+      "example": "hash('hello world', 'sha256', 'hex')"
     },
     {
-      "method": "POST",
-      "path": "/hash/verify",
-      "description": "Verify bcrypt or argon2 hash",
-      "requestBody": {
-        "data": "password123",
-        "hash": "$2a$10$...",
-        "algorithm": "bcrypt"
-      }
+      "name": "hashFile",
+      "description": "Calculate hash/checksum of file data (base64 encoded)",
+      "parameters": {
+        "fileData": { "type": "string", "required": true, "description": "Base64 encoded file data" },
+        "algorithm": { "type": "string", "default": "sha256", "description": "Hash algorithm" }
+      },
+      "returns": { "type": "string", "description": "File hash" }
     },
     {
-      "method": "POST",
-      "path": "/encrypt",
-      "description": "Encrypt data using AES-256-GCM",
-      "requestBody": {
-        "data": "secret message",
-        "key": "optional-32-byte-key"
-      }
+      "name": "encrypt",
+      "description": "Encrypt data using AES-256-GCM (authenticated encryption)",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "Data to encrypt" },
+        "key": { "type": "string", "required": true, "description": "Encryption key (will be derived to 32 bytes)" },
+        "algorithm": { "type": "string", "default": "aes-256-gcm", "enum": ["aes-256-gcm", "aes-256-cbc", "aes-128-gcm", "aes-128-cbc"] }
+      },
+      "returns": { "type": "object", "description": "{ encrypted, iv, tag?, algorithm }" },
+      "example": "encrypt('secret message', 'my-secret-key')"
     },
     {
-      "method": "POST",
-      "path": "/decrypt",
-      "description": "Decrypt AES-256-GCM encrypted data",
-      "requestBody": {
-        "data": "encrypted-base64",
-        "key": "32-byte-key",
-        "iv": "initialization-vector",
-        "tag": "auth-tag"
-      }
+      "name": "decrypt",
+      "description": "Decrypt AES encrypted data",
+      "parameters": {
+        "encrypted": { "type": "string", "required": true, "description": "Base64 encrypted data" },
+        "key": { "type": "string", "required": true, "description": "Encryption key" },
+        "iv": { "type": "string", "required": true, "description": "Base64 initialization vector" },
+        "tag": { "type": "string", "description": "Base64 auth tag (required for GCM)" },
+        "algorithm": { "type": "string", "default": "aes-256-gcm" }
+      },
+      "returns": { "type": "string", "description": "Decrypted plaintext" }
     },
     {
-      "method": "POST",
-      "path": "/jwt/generate",
+      "name": "jwtSign",
       "description": "Generate a JWT token",
-      "requestBody": {
-        "payload": { "userId": "123", "role": "admin" },
-        "secret": "your-secret-key",
-        "options": { "expiresIn": "1h" }
-      }
+      "parameters": {
+        "payload": { "type": "object", "required": true, "description": "JWT payload/claims" },
+        "secret": { "type": "string", "required": true, "description": "Signing secret" },
+        "expiresIn": { "type": "string", "default": "1h", "description": "Expiration time (e.g., '1h', '7d', '30m')" },
+        "algorithm": { "type": "string", "default": "HS256", "enum": ["HS256", "HS384", "HS512"] },
+        "issuer": { "type": "string", "description": "Token issuer" },
+        "audience": { "type": "string", "description": "Token audience" },
+        "subject": { "type": "string", "description": "Token subject" }
+      },
+      "returns": { "type": "object", "description": "{ token, expiresAt, issuedAt }" },
+      "example": "jwtSign({ userId: '123', role: 'admin' }, 'secret', '24h')"
     },
     {
-      "method": "POST",
-      "path": "/jwt/verify",
+      "name": "jwtVerify",
       "description": "Verify and decode a JWT token",
-      "requestBody": {
-        "token": "eyJhbGciOiJIUzI1NiIs...",
-        "secret": "your-secret-key"
-      }
+      "parameters": {
+        "token": { "type": "string", "required": true, "description": "JWT token to verify" },
+        "secret": { "type": "string", "required": true, "description": "Signing secret" },
+        "algorithms": { "type": "array", "default": ["HS256"], "description": "Allowed algorithms" },
+        "issuer": { "type": "string", "description": "Expected issuer" },
+        "audience": { "type": "string", "description": "Expected audience" }
+      },
+      "returns": { "type": "object", "description": "{ valid, payload?, error?, message? }" }
     },
     {
-      "method": "POST",
-      "path": "/jwt/decode",
-      "description": "Decode a JWT without verification",
-      "requestBody": {
-        "token": "eyJhbGciOiJIUzI1NiIs..."
-      }
+      "name": "jwtDecode",
+      "description": "Decode a JWT without verification (for inspection only)",
+      "parameters": {
+        "token": { "type": "string", "required": true, "description": "JWT token to decode" }
+      },
+      "returns": { "type": "object", "description": "{ header, payload }" }
     },
     {
-      "method": "GET",
-      "path": "/health",
-      "description": "Health check endpoint",
-      "authentication": false
+      "name": "hmacSign",
+      "description": "Create HMAC signature",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "Data to sign" },
+        "key": { "type": "string", "required": true, "description": "HMAC key" },
+        "algorithm": { "type": "string", "default": "sha256", "description": "Hash algorithm" },
+        "encoding": { "type": "string", "default": "hex", "enum": ["hex", "base64"] }
+      },
+      "returns": { "type": "string", "description": "HMAC signature" },
+      "example": "hmacSign('message', 'secret-key', 'sha256')"
+    },
+    {
+      "name": "hmacVerify",
+      "description": "Verify HMAC signature (timing-safe comparison)",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "Original data" },
+        "signature": { "type": "string", "required": true, "description": "Signature to verify" },
+        "key": { "type": "string", "required": true, "description": "HMAC key" },
+        "algorithm": { "type": "string", "default": "sha256" },
+        "encoding": { "type": "string", "default": "hex" }
+      },
+      "returns": { "type": "boolean", "description": "True if signature is valid" }
+    },
+    {
+      "name": "randomBytes",
+      "description": "Generate cryptographically secure random bytes",
+      "parameters": {
+        "length": { "type": "number", "default": 32, "description": "Number of bytes" },
+        "encoding": { "type": "string", "default": "hex", "enum": ["hex", "base64"] }
+      },
+      "returns": { "type": "string", "description": "Random bytes in specified encoding" },
+      "example": "randomBytes(32, 'hex')"
+    },
+    {
+      "name": "uuid",
+      "description": "Generate a UUID v4",
+      "parameters": {},
+      "returns": { "type": "string", "description": "UUID v4 string" },
+      "example": "uuid()"
+    },
+    {
+      "name": "base64Encode",
+      "description": "Encode string to Base64",
+      "parameters": {
+        "data": { "type": "string", "required": true },
+        "urlSafe": { "type": "boolean", "default": false, "description": "Use URL-safe Base64" }
+      },
+      "returns": { "type": "string", "description": "Base64 encoded string" }
+    },
+    {
+      "name": "base64Decode",
+      "description": "Decode Base64 string",
+      "parameters": {
+        "data": { "type": "string", "required": true },
+        "urlSafe": { "type": "boolean", "default": false }
+      },
+      "returns": { "type": "string", "description": "Decoded string" }
+    },
+    {
+      "name": "hexEncode",
+      "description": "Encode string to hexadecimal",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "Hex encoded string" }
+    },
+    {
+      "name": "hexDecode",
+      "description": "Decode hexadecimal string",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "Decoded string" }
+    },
+    {
+      "name": "compareStrings",
+      "description": "Timing-safe string comparison (prevents timing attacks)",
+      "parameters": {
+        "a": { "type": "string", "required": true },
+        "b": { "type": "string", "required": true }
+      },
+      "returns": { "type": "boolean", "description": "True if strings are equal" }
+    },
+    {
+      "name": "deriveKey",
+      "description": "Derive encryption key from password using PBKDF2",
+      "parameters": {
+        "password": { "type": "string", "required": true },
+        "salt": { "type": "string", "description": "Salt (generated if not provided)" },
+        "iterations": { "type": "number", "default": 100000 },
+        "keyLength": { "type": "number", "default": 32 },
+        "digest": { "type": "string", "default": "sha256" }
+      },
+      "returns": { "type": "object", "description": "{ key, salt }" }
+    },
+    {
+      "name": "generatePassword",
+      "description": "Generate a secure random password",
+      "parameters": {
+        "length": { "type": "number", "default": 16 },
+        "options": { "type": "object", "description": "{ uppercase, lowercase, numbers, symbols }" }
+      },
+      "returns": { "type": "string", "description": "Generated password" }
+    },
+    {
+      "name": "generateKeyPair",
+      "description": "Generate RSA, ECDSA, or Ed25519 key pair",
+      "parameters": {
+        "type": { "type": "string", "default": "rsa", "enum": ["rsa", "ec", "ed25519"], "description": "Key type" },
+        "options": { "type": "object", "description": "{ modulusLength, namedCurve, passphrase, format }" }
+      },
+      "returns": { "type": "object", "description": "{ publicKey, privateKey }" },
+      "example": "generateKeyPair('rsa', { modulusLength: 2048 })"
+    },
+    {
+      "name": "rsaEncrypt",
+      "description": "Encrypt data using RSA public key",
+      "parameters": {
+        "data": { "type": "string", "required": true },
+        "publicKey": { "type": "string", "required": true, "description": "PEM public key" },
+        "padding": { "type": "string", "default": "oaep", "enum": ["oaep", "pkcs1"] }
+      },
+      "returns": { "type": "string", "description": "Base64 encrypted data" }
+    },
+    {
+      "name": "rsaDecrypt",
+      "description": "Decrypt data using RSA private key",
+      "parameters": {
+        "encrypted": { "type": "string", "required": true },
+        "privateKey": { "type": "string", "required": true },
+        "padding": { "type": "string", "default": "oaep" },
+        "passphrase": { "type": "string", "description": "Private key passphrase" }
+      },
+      "returns": { "type": "string", "description": "Decrypted plaintext" }
+    },
+    {
+      "name": "sign",
+      "description": "Create digital signature using private key",
+      "parameters": {
+        "data": { "type": "string", "required": true },
+        "privateKey": { "type": "string", "required": true },
+        "algorithm": { "type": "string", "default": "sha256" },
+        "passphrase": { "type": "string" }
+      },
+      "returns": { "type": "string", "description": "Base64 signature" }
+    },
+    {
+      "name": "verify",
+      "description": "Verify digital signature using public key",
+      "parameters": {
+        "data": { "type": "string", "required": true },
+        "signature": { "type": "string", "required": true },
+        "publicKey": { "type": "string", "required": true },
+        "algorithm": { "type": "string", "default": "sha256" }
+      },
+      "returns": { "type": "boolean", "description": "True if signature is valid" }
+    },
+    {
+      "name": "totpGenerateSecret",
+      "description": "Generate TOTP secret for 2FA setup",
+      "parameters": {
+        "length": { "type": "number", "default": 20 },
+        "options": { "type": "object", "description": "{ issuer, accountName }" }
+      },
+      "returns": { "type": "object", "description": "{ secret, base32, otpauthUrl }" },
+      "example": "totpGenerateSecret(20, { issuer: 'MyApp', accountName: 'user@example.com' })"
+    },
+    {
+      "name": "totp",
+      "description": "Generate TOTP code for current time",
+      "parameters": {
+        "secret": { "type": "string", "required": true, "description": "Hex or Base32 secret" },
+        "options": { "type": "object", "description": "{ digits, period, algorithm, timestamp }" }
+      },
+      "returns": { "type": "string", "description": "6-digit TOTP code" }
+    },
+    {
+      "name": "totpVerify",
+      "description": "Verify TOTP code with time window tolerance",
+      "parameters": {
+        "token": { "type": "string", "required": true, "description": "TOTP code to verify" },
+        "secret": { "type": "string", "required": true },
+        "options": { "type": "object", "description": "{ window, digits, period }" }
+      },
+      "returns": { "type": "object", "description": "{ valid, delta }" }
+    },
+    {
+      "name": "hotp",
+      "description": "Generate HOTP code for counter value",
+      "parameters": {
+        "secret": { "type": "string", "required": true },
+        "counter": { "type": "number", "required": true },
+        "options": { "type": "object", "description": "{ digits, algorithm }" }
+      },
+      "returns": { "type": "string", "description": "HOTP code" }
+    },
+    {
+      "name": "scryptDerive",
+      "description": "Derive key using scrypt (memory-hard, secure for passwords)",
+      "parameters": {
+        "password": { "type": "string", "required": true },
+        "salt": { "type": "string", "description": "Salt (generated if not provided)" },
+        "options": { "type": "object", "description": "{ N, r, p, keyLength }" }
+      },
+      "returns": { "type": "object", "description": "{ key, salt, params }" }
+    },
+    {
+      "name": "hashPassword",
+      "description": "Hash password for secure storage (scrypt with auto-salt)",
+      "parameters": {
+        "password": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "Encoded hash string with embedded salt" },
+      "example": "hashPassword('myP@ssw0rd!')"
+    },
+    {
+      "name": "verifyPassword",
+      "description": "Verify password against stored hash",
+      "parameters": {
+        "password": { "type": "string", "required": true },
+        "hashString": { "type": "string", "required": true, "description": "Hash from hashPassword()" }
+      },
+      "returns": { "type": "boolean", "description": "True if password matches" }
+    },
+    {
+      "name": "encryptObject",
+      "description": "Encrypt a JSON object (AES-256-GCM)",
+      "parameters": {
+        "obj": { "type": "object", "required": true },
+        "key": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "Encrypted string (iv:tag:data)" }
+    },
+    {
+      "name": "decryptObject",
+      "description": "Decrypt a JSON object",
+      "parameters": {
+        "encryptedStr": { "type": "string", "required": true },
+        "key": { "type": "string", "required": true }
+      },
+      "returns": { "type": "object", "description": "Decrypted object" }
+    },
+    {
+      "name": "crc32",
+      "description": "Calculate CRC32 checksum",
+      "parameters": {
+        "data": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string", "description": "CRC32 as hex string" }
     }
   ],
-  
-  "environment": [
-    {
-      "name": "LOG_LEVEL",
-      "description": "Logging verbosity level",
-      "default": "info",
-      "required": false
+
+  "config": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "defaultHashAlgorithm": {
+          "type": "string",
+          "enum": ["sha256", "sha512", "md5"],
+          "default": "sha256"
+        },
+        "defaultEncryptionAlgorithm": {
+          "type": "string",
+          "enum": ["aes-256-gcm", "aes-256-cbc"],
+          "default": "aes-256-gcm"
+        },
+        "jwtDefaultExpiry": {
+          "type": "string",
+          "default": "1h"
+        },
+        "pbkdf2Iterations": {
+          "type": "integer",
+          "default": 100000,
+          "minimum": 10000
+        },
+        "scryptN": {
+          "type": "integer",
+          "default": 16384,
+          "description": "scrypt CPU/memory cost"
+        },
+        "totpWindow": {
+          "type": "integer",
+          "default": 1,
+          "description": "TOTP verification window (±periods)"
+        }
+      }
     },
-    {
-      "name": "BCRYPT_ROUNDS",
-      "description": "Number of bcrypt hashing rounds",
-      "default": "10",
-      "required": false
+    "defaults": {
+      "defaultHashAlgorithm": "sha256",
+      "defaultEncryptionAlgorithm": "aes-256-gcm",
+      "jwtDefaultExpiry": "1h",
+      "pbkdf2Iterations": 100000,
+      "scryptN": 16384,
+      "totpWindow": 1
     }
-  ],
-  
-  "dependencies": {
-    "services": ["redis"]
-  },
-  
-  "resources": {
-    "memory": "256m",
-    "cpu": "0.5"
   }
 }

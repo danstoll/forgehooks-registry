@@ -1,0 +1,510 @@
+{
+  "$schema": "../forgehook-schema.json",
+  "id": "streaming-file-service",
+  "name": "Streaming File Service",
+  "version": "1.0.0",
+  "description": "Enterprise-grade large file handling with chunked uploads/downloads, resumable transfers, multi-cloud storage streaming (S3, Azure Blob, GCS), and file transformations. Handles files of any size without memory constraints - a critical gap in platforms like Power Automate (limited to 20-40MB).",
+  "author": {
+    "name": "FlowForge",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/flowforge/forgehooks-registry",
+  "icon": "cloud-upload",
+  "category": "data",
+  "tags": ["files", "streaming", "upload", "download", "s3", "azure", "gcs", "chunked", "resumable", "large-files", "transcoding", "pdf"],
+
+  "runtime": "container",
+  "image": {
+    "repository": "flowforge/streaming-file-service",
+    "tag": "latest"
+  },
+  "port": 3020,
+  "basePath": "/api/v1/files",
+
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/upload/init",
+      "description": "Initialize a chunked upload session. Returns uploadId for subsequent chunk uploads.",
+      "requestBody": {
+        "filename": "large-video.mp4",
+        "totalSize": 5368709120,
+        "mimeType": "video/mp4",
+        "chunkSize": 10485760,
+        "metadata": {}
+      },
+      "response": {
+        "uploadId": "uuid",
+        "chunkSize": 10485760,
+        "totalChunks": 512,
+        "expiresAt": "ISO8601"
+      }
+    },
+    {
+      "method": "PUT",
+      "path": "/upload/{uploadId}/chunk/{chunkIndex}",
+      "description": "Upload a single chunk. Supports resume - re-upload failed chunks.",
+      "requestBody": "binary chunk data",
+      "response": {
+        "chunkIndex": 0,
+        "bytesReceived": 10485760,
+        "checksum": "sha256"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/upload/{uploadId}/complete",
+      "description": "Complete chunked upload - assembles chunks and verifies integrity.",
+      "requestBody": {
+        "checksums": ["sha256 per chunk"]
+      },
+      "response": {
+        "fileId": "uuid",
+        "path": "/files/uuid/large-video.mp4",
+        "size": 5368709120,
+        "checksum": "sha256-full"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/upload/{uploadId}/status",
+      "description": "Get upload progress - which chunks received, resume point.",
+      "response": {
+        "uploadId": "uuid",
+        "receivedChunks": [0, 1, 2, 5],
+        "missingChunks": [3, 4],
+        "bytesUploaded": 52428800,
+        "percentComplete": 60
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/upload/{uploadId}",
+      "description": "Cancel and cleanup an incomplete upload."
+    },
+    {
+      "method": "GET",
+      "path": "/download/{fileId}",
+      "description": "Stream download with Range header support for resume.",
+      "headers": {
+        "Range": "bytes=0-10485759"
+      },
+      "response": "binary stream with Content-Range header"
+    },
+    {
+      "method": "POST",
+      "path": "/download/init",
+      "description": "Initialize chunked download - get download manifest.",
+      "requestBody": {
+        "fileId": "uuid",
+        "chunkSize": 10485760
+      },
+      "response": {
+        "downloadId": "uuid",
+        "totalSize": 5368709120,
+        "totalChunks": 512,
+        "chunks": [{"index": 0, "start": 0, "end": 10485759, "url": "/download/uuid/chunk/0"}]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cloud/upload",
+      "description": "Stream upload directly to cloud storage (S3/Azure/GCS) without storing locally.",
+      "requestBody": {
+        "provider": "s3",
+        "bucket": "my-bucket",
+        "key": "path/to/file.mp4",
+        "sourceUrl": "https://example.com/file.mp4",
+        "credentials": {
+          "accessKeyId": "...",
+          "secretAccessKey": "..."
+        }
+      },
+      "response": {
+        "provider": "s3",
+        "bucket": "my-bucket",
+        "key": "path/to/file.mp4",
+        "url": "s3://my-bucket/path/to/file.mp4",
+        "size": 5368709120
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cloud/download",
+      "description": "Stream download from cloud storage to local or another destination.",
+      "requestBody": {
+        "provider": "azure",
+        "container": "my-container",
+        "blob": "path/to/file.mp4",
+        "destinationUrl": "https://webhook.example.com/receive"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cloud/copy",
+      "description": "Copy files between cloud providers (S3 to Azure, GCS to S3, etc.).",
+      "requestBody": {
+        "source": {
+          "provider": "s3",
+          "bucket": "source-bucket",
+          "key": "file.mp4"
+        },
+        "destination": {
+          "provider": "azure",
+          "container": "dest-container",
+          "blob": "file.mp4"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/cloud/presigned-url",
+      "description": "Generate presigned URLs for direct browser uploads/downloads.",
+      "requestBody": {
+        "provider": "s3",
+        "bucket": "my-bucket",
+        "key": "uploads/user-file.pdf",
+        "operation": "PUT",
+        "expiresIn": 3600,
+        "contentType": "application/pdf",
+        "maxSize": 104857600
+      },
+      "response": {
+        "url": "https://s3.amazonaws.com/my-bucket/uploads/user-file.pdf?X-Amz-...",
+        "expiresAt": "ISO8601",
+        "headers": {"Content-Type": "application/pdf"}
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/transform/split-pdf",
+      "description": "Split large PDF into smaller files by page ranges.",
+      "requestBody": {
+        "fileId": "uuid",
+        "ranges": [[1, 10], [11, 20], [21, -1]],
+        "outputFormat": "pdf"
+      },
+      "response": {
+        "files": [
+          {"fileId": "uuid-1", "pages": "1-10", "size": 1048576},
+          {"fileId": "uuid-2", "pages": "11-20", "size": 1048576},
+          {"fileId": "uuid-3", "pages": "21-50", "size": 2097152}
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/transform/merge-pdf",
+      "description": "Merge multiple PDFs into one.",
+      "requestBody": {
+        "fileIds": ["uuid-1", "uuid-2", "uuid-3"],
+        "outputFilename": "merged.pdf"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/transform/compress",
+      "description": "Compress files (zip, gzip, tar.gz) with streaming.",
+      "requestBody": {
+        "fileIds": ["uuid-1", "uuid-2"],
+        "format": "zip",
+        "compressionLevel": 6,
+        "password": "optional"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/transform/extract",
+      "description": "Extract compressed archives with streaming.",
+      "requestBody": {
+        "fileId": "uuid",
+        "password": "optional",
+        "filter": "*.pdf"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/transform/transcode",
+      "description": "Transcode video/audio files. Runs asynchronously for large files.",
+      "requestBody": {
+        "fileId": "uuid",
+        "outputFormat": "mp4",
+        "videoCodec": "h264",
+        "audioCodec": "aac",
+        "resolution": "1920x1080",
+        "bitrate": "5M",
+        "preset": "medium"
+      },
+      "response": {
+        "jobId": "uuid",
+        "status": "processing",
+        "statusUrl": "/transform/status/uuid"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/transform/extract-audio",
+      "description": "Extract audio track from video file.",
+      "requestBody": {
+        "fileId": "uuid",
+        "format": "mp3",
+        "bitrate": "320k"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/transform/thumbnail",
+      "description": "Generate thumbnails from video at specified timestamps.",
+      "requestBody": {
+        "fileId": "uuid",
+        "timestamps": [0, 30, 60, 120],
+        "width": 320,
+        "format": "jpg"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/transform/status/{jobId}",
+      "description": "Check status of async transformation job.",
+      "response": {
+        "jobId": "uuid",
+        "status": "completed",
+        "progress": 100,
+        "outputFileId": "uuid",
+        "duration": 45.2
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/checksum",
+      "description": "Calculate checksum of file without loading into memory.",
+      "requestBody": {
+        "fileId": "uuid",
+        "algorithm": "sha256"
+      },
+      "response": {
+        "algorithm": "sha256",
+        "checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/diff",
+      "description": "Binary diff between two files for delta sync.",
+      "requestBody": {
+        "sourceFileId": "uuid-1",
+        "targetFileId": "uuid-2"
+      },
+      "response": {
+        "identical": false,
+        "deltaSize": 1048576,
+        "deltaFileId": "uuid-delta"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/pipe",
+      "description": "Pipe data between sources - URL to cloud, cloud to webhook, file to email, etc.",
+      "requestBody": {
+        "source": {
+          "type": "url",
+          "url": "https://example.com/large-file.zip"
+        },
+        "destination": {
+          "type": "s3",
+          "bucket": "my-bucket",
+          "key": "imported/large-file.zip"
+        },
+        "transform": {
+          "decompress": true
+        }
+      }
+    },
+    {
+      "method": "DELETE",
+      "path": "/{fileId}",
+      "description": "Delete a file from temporary storage."
+    },
+    {
+      "method": "GET",
+      "path": "/{fileId}/metadata",
+      "description": "Get file metadata without downloading.",
+      "response": {
+        "fileId": "uuid",
+        "filename": "video.mp4",
+        "size": 5368709120,
+        "mimeType": "video/mp4",
+        "checksum": "sha256",
+        "createdAt": "ISO8601",
+        "expiresAt": "ISO8601",
+        "mediaInfo": {
+          "duration": 3600,
+          "videoCodec": "h264",
+          "audioCodec": "aac",
+          "resolution": "1920x1080",
+          "bitrate": 12000000
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "description": "Health check endpoint",
+      "authentication": false
+    }
+  ],
+
+  "environment": [
+    {
+      "name": "STORAGE_PATH",
+      "description": "Local path for temporary file storage",
+      "required": false,
+      "default": "/data/files"
+    },
+    {
+      "name": "MAX_FILE_SIZE_GB",
+      "description": "Maximum file size in gigabytes (0 = unlimited)",
+      "required": false,
+      "default": "0"
+    },
+    {
+      "name": "CHUNK_SIZE_MB",
+      "description": "Default chunk size in megabytes",
+      "required": false,
+      "default": "10"
+    },
+    {
+      "name": "UPLOAD_EXPIRY_HOURS",
+      "description": "Hours before incomplete uploads are cleaned up",
+      "required": false,
+      "default": "24"
+    },
+    {
+      "name": "FILE_RETENTION_HOURS",
+      "description": "Hours to retain completed files before auto-delete",
+      "required": false,
+      "default": "72"
+    },
+    {
+      "name": "AWS_ACCESS_KEY_ID",
+      "description": "Default AWS access key for S3 operations",
+      "required": false,
+      "secret": true
+    },
+    {
+      "name": "AWS_SECRET_ACCESS_KEY",
+      "description": "Default AWS secret key for S3 operations",
+      "required": false,
+      "secret": true
+    },
+    {
+      "name": "AWS_REGION",
+      "description": "Default AWS region",
+      "required": false,
+      "default": "us-east-1"
+    },
+    {
+      "name": "AZURE_STORAGE_CONNECTION_STRING",
+      "description": "Azure Blob Storage connection string",
+      "required": false,
+      "secret": true
+    },
+    {
+      "name": "GCS_CREDENTIALS_JSON",
+      "description": "Google Cloud Storage service account JSON",
+      "required": false,
+      "secret": true
+    },
+    {
+      "name": "FFMPEG_THREADS",
+      "description": "Number of threads for FFmpeg transcoding",
+      "required": false,
+      "default": "4"
+    },
+    {
+      "name": "CONCURRENT_TRANSFORMS",
+      "description": "Max concurrent transformation jobs",
+      "required": false,
+      "default": "2"
+    },
+    {
+      "name": "LOG_LEVEL",
+      "description": "Logging verbosity level",
+      "required": false,
+      "default": "info"
+    }
+  ],
+
+  "resources": {
+    "memory": "2g",
+    "cpu": "2.0"
+  },
+
+  "volumes": [
+    {
+      "name": "file-storage",
+      "path": "/data/files",
+      "description": "Temporary storage for uploaded files and transformations"
+    }
+  ],
+
+  "healthCheck": {
+    "path": "/health",
+    "interval": 30,
+    "timeout": 10,
+    "retries": 3
+  },
+
+  "dependencies": {
+    "services": ["redis"]
+  },
+
+  "config": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "defaultProvider": {
+          "type": "string",
+          "enum": ["local", "s3", "azure", "gcs"],
+          "default": "local",
+          "description": "Default cloud storage provider"
+        },
+        "enableTranscoding": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable video/audio transcoding features"
+        },
+        "enablePdfProcessing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable PDF split/merge features"
+        },
+        "maxConcurrentUploads": {
+          "type": "integer",
+          "default": 10,
+          "description": "Maximum concurrent upload sessions per user"
+        },
+        "checksumAlgorithm": {
+          "type": "string",
+          "enum": ["md5", "sha1", "sha256", "sha512"],
+          "default": "sha256",
+          "description": "Default checksum algorithm"
+        },
+        "presignedUrlExpiry": {
+          "type": "integer",
+          "default": 3600,
+          "description": "Default presigned URL expiry in seconds"
+        }
+      }
+    },
+    "defaults": {
+      "defaultProvider": "local",
+      "enableTranscoding": true,
+      "enablePdfProcessing": true,
+      "maxConcurrentUploads": 10,
+      "checksumAlgorithm": "sha256",
+      "presignedUrlExpiry": 3600
+    }
+  }
+}

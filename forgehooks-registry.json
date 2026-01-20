@@ -39,6 +39,17 @@
       "file": "packages/date-utils-1.0.0.fhk",
       "size": "12KB",
       "runtime": "embedded"
+    },
+    "formula-engine": {
+      "version": "1.0.0",
+      "file": "packages/formula-engine-1.0.0.fhk",
+      "size": "45KB",
+      "runtime": "embedded"
+    },
+    "streaming-file-service": {
+      "version": "1.0.0",
+      "file": "packages/streaming-file-service-1.0.0.fhk",
+      "size": "350MB"
     }
   },
   "plugins": [
@@ -982,6 +993,139 @@
         "dependencies": {
           "services": ["redis"]
         }
+      }
+    },
+    {
+      "id": "formula-engine",
+      "verified": true,
+      "featured": true,
+      "downloads": 0,
+      "rating": 5.0,
+      "repository": "https://github.com/danstoll/forgehooks-registry/tree/main/plugins/formula-engine",
+      "manifest": {
+        "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+        "id": "formula-engine",
+        "name": "Formula Engine",
+        "version": "1.0.0",
+        "description": "Comprehensive Excel-compatible formula engine with 150+ functions spanning Math/Statistics, Logical, Text, Date/Time, Financial, and Lookup categories. Pure JavaScript implementation - zero external dependencies.",
+        "author": {
+          "name": "FlowForge Team",
+          "url": "https://flowforge.dev"
+        },
+        "license": "MIT",
+        "repository": "https://github.com/danstoll/forgehooks-registry",
+        "icon": "table",
+        "category": "data",
+        "tags": ["excel", "formulas", "spreadsheet", "functions", "math", "financial", "lookup", "vlookup", "calculations"],
+        "runtime": "embedded",
+        "embedded": {
+          "entrypoint": "index.js",
+          "exports": [
+            "SUM", "AVERAGE", "COUNT", "COUNTA", "COUNTBLANK", "COUNTIF", "COUNTIFS",
+            "MAX", "MIN", "MEDIAN", "MODE", "STDEV", "STDEVP", "VAR", "VARP",
+            "SUMIF", "SUMIFS", "AVERAGEIF",
+            "ROUND", "ROUNDUP", "ROUNDDOWN", "CEILING", "FLOOR", "TRUNC", "INT",
+            "ABS", "SIGN", "SQRT", "POWER", "EXP", "LN", "LOG", "LOG10",
+            "MOD", "QUOTIENT", "PRODUCT", "SUMPRODUCT", "GCD", "LCM", "FACT", "COMBIN", "PERMUT",
+            "RAND", "RANDBETWEEN", "PI", "SIN", "COS", "TAN", "ASIN", "ACOS", "ATAN", "ATAN2",
+            "DEGREES", "RADIANS", "LARGE", "SMALL", "RANK", "PERCENTILE", "QUARTILE",
+            "IF", "IFS", "SWITCH", "AND", "OR", "NOT", "XOR", "IFERROR", "IFNA",
+            "ISBLANK", "ISNUMBER", "ISTEXT", "ISLOGICAL", "ISERROR", "ISEVEN", "ISODD", "TRUE", "FALSE",
+            "LEFT", "RIGHT", "MID", "LEN", "FIND", "SEARCH",
+            "CONCAT", "CONCATENATE", "TEXTJOIN", "TRIM", "CLEAN", "UPPER", "LOWER", "PROPER",
+            "SUBSTITUTE", "REPLACE", "REPT", "TEXT", "VALUE", "FIXED", "DOLLAR",
+            "CHAR", "CODE", "EXACT", "TEXTSPLIT", "TEXTBEFORE", "TEXTAFTER",
+            "TODAY", "NOW", "DATE", "DATEVALUE", "TIME", "TIMEVALUE",
+            "YEAR", "MONTH", "DAY", "HOUR", "MINUTE", "SECOND",
+            "WEEKDAY", "WEEKNUM", "ISOWEEKNUM", "DATEDIF", "DAYS", "DAYS360",
+            "EDATE", "EOMONTH", "WORKDAY", "NETWORKDAYS", "YEARFRAC",
+            "PMT", "PPMT", "IPMT", "CUMIPMT", "CUMPRINC", "PV", "FV", "NPV", "XNPV",
+            "IRR", "XIRR", "MIRR", "RATE", "NPER", "EFFECT", "NOMINAL",
+            "SLN", "SYD", "DB", "DDB",
+            "VLOOKUP", "HLOOKUP", "XLOOKUP", "INDEX", "MATCH", "XMATCH",
+            "CHOOSE", "LOOKUP", "OFFSET", "ROW", "COLUMN", "ROWS", "COLUMNS",
+            "TRANSPOSE", "SORT", "FILTER", "UNIQUE"
+          ],
+          "timeout": 5000,
+          "memoryLimit": 64
+        },
+        "config": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "dateFormat": { "type": "string", "default": "ISO", "enum": ["ISO", "US", "EU"] },
+              "decimalSeparator": { "type": "string", "default": "." },
+              "thousandsSeparator": { "type": "string", "default": "," },
+              "currencySymbol": { "type": "string", "default": "$" },
+              "weekStartsOn": { "type": "integer", "default": 0 }
+            }
+          },
+          "defaults": {
+            "dateFormat": "ISO",
+            "decimalSeparator": ".",
+            "thousandsSeparator": ",",
+            "currencySymbol": "$",
+            "weekStartsOn": 0
+          }
+        },
+        "resources": { "memory": "64Mi", "cpu": "0.2" }
+      }
+    },
+    {
+      "id": "streaming-file-service",
+      "verified": true,
+      "featured": true,
+      "downloads": 0,
+      "rating": 5.0,
+      "repository": "https://github.com/danstoll/forgehooks-registry/tree/main/plugins/streaming-file-service",
+      "manifest": {
+        "$schema": "https://flowforge.dev/schemas/forgehook-v1.json",
+        "id": "streaming-file-service",
+        "name": "Streaming File Service",
+        "version": "1.0.0",
+        "description": "Enterprise-grade large file handling with chunked uploads/downloads, resumable transfers, multi-cloud storage streaming (S3, Azure Blob, GCS), and file transformations. Handles files of any size - addresses the 20-40MB limit in platforms like Power Automate.",
+        "author": {
+          "name": "FlowForge Team",
+          "url": "https://flowforge.dev"
+        },
+        "license": "MIT",
+        "repository": "https://github.com/danstoll/forgehooks-registry",
+        "icon": "cloud-upload",
+        "category": "data",
+        "tags": ["files", "streaming", "upload", "download", "s3", "azure", "gcs", "chunked", "resumable", "large-files", "transcoding", "pdf"],
+        "runtime": "container",
+        "image": {
+          "repository": "flowforge/streaming-file-service",
+          "tag": "latest"
+        },
+        "port": 3020,
+        "basePath": "/api/v1/files",
+        "endpoints": [
+          { "method": "POST", "path": "/upload/init", "description": "Initialize chunked upload session" },
+          { "method": "PUT", "path": "/upload/{uploadId}/chunk/{chunkIndex}", "description": "Upload a single chunk" },
+          { "method": "POST", "path": "/upload/{uploadId}/complete", "description": "Complete chunked upload" },
+          { "method": "GET", "path": "/upload/{uploadId}/status", "description": "Get upload progress" },
+          { "method": "GET", "path": "/download/{fileId}", "description": "Stream download with Range support" },
+          { "method": "POST", "path": "/cloud/upload", "description": "Stream to cloud storage (S3/Azure/GCS)" },
+          { "method": "POST", "path": "/cloud/presigned-url", "description": "Generate presigned URLs" },
+          { "method": "POST", "path": "/transform/split-pdf", "description": "Split PDF into smaller files" },
+          { "method": "POST", "path": "/transform/merge-pdf", "description": "Merge multiple PDFs" },
+          { "method": "POST", "path": "/transform/transcode", "description": "Transcode video/audio files" },
+          { "method": "POST", "path": "/transform/compress", "description": "Create zip/tar archives" },
+          { "method": "GET", "path": "/health", "description": "Health check" }
+        ],
+        "environment": [
+          { "name": "STORAGE_PATH", "description": "Local file storage path", "default": "/data/files" },
+          { "name": "MAX_FILE_SIZE_GB", "description": "Max file size (0=unlimited)", "default": "0" },
+          { "name": "AWS_ACCESS_KEY_ID", "description": "AWS access key", "secret": true },
+          { "name": "AWS_SECRET_ACCESS_KEY", "description": "AWS secret key", "secret": true },
+          { "name": "AZURE_STORAGE_CONNECTION_STRING", "description": "Azure connection string", "secret": true },
+          { "name": "GCS_CREDENTIALS_JSON", "description": "GCS service account JSON", "secret": true }
+        ],
+        "resources": { "memory": "2g", "cpu": "2.0" },
+        "volumes": [{ "name": "file-storage", "path": "/data/files" }],
+        "healthCheck": { "path": "/health", "interval": 30, "timeout": 10 },
+        "dependencies": { "services": ["redis"] }
       }
     }
   ]

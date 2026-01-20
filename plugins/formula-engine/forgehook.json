@@ -1,0 +1,1560 @@
+{
+  "$schema": "../forgehook-schema.json",
+  "id": "formula-engine",
+  "name": "Formula Engine",
+  "version": "1.0.0",
+  "description": "Comprehensive Excel-compatible formula engine with 150+ functions spanning Math/Statistics, Logical, Text, Date/Time, Financial, and Lookup categories. Pure JavaScript implementation - zero external dependencies. Future middleware support for spreadsheet file processing.",
+  "author": {
+    "name": "FlowForge",
+    "url": "https://flowforge.dev"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/flowforge/forgehooks-registry",
+  "icon": "table",
+  "category": "data",
+  "tags": ["excel", "formulas", "spreadsheet", "functions", "math", "financial", "lookup", "text", "dates", "vlookup", "calculations"],
+  
+  "runtime": "embedded",
+  "embedded": {
+    "entrypoint": "index.js",
+    "sandbox": true
+  },
+  
+  "exports": [
+    {
+      "name": "SUM",
+      "description": "Adds all numbers in a range",
+      "parameters": {
+        "values": { "type": "array", "required": true, "description": "Array of numbers to sum" }
+      },
+      "returns": { "type": "number", "description": "Sum of all values" },
+      "example": "SUM([1, 2, 3, 4, 5]) // 15"
+    },
+    {
+      "name": "AVERAGE",
+      "description": "Calculates the arithmetic mean of numbers",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number", "description": "Average value" }
+    },
+    {
+      "name": "COUNT",
+      "description": "Counts how many numbers are in a range",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number", "description": "Count of numeric values" }
+    },
+    {
+      "name": "COUNTA",
+      "description": "Counts non-empty values in a range",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number", "description": "Count of non-empty values" }
+    },
+    {
+      "name": "COUNTBLANK",
+      "description": "Counts empty cells in a range",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number", "description": "Count of empty values" }
+    },
+    {
+      "name": "COUNTIF",
+      "description": "Counts cells that meet a condition",
+      "parameters": {
+        "values": { "type": "array", "required": true },
+        "criteria": { "type": "string", "required": true, "description": "Condition like '>10', '=A', '<>0'" }
+      },
+      "returns": { "type": "number" },
+      "example": "COUNTIF([1, 5, 10, 15], '>5') // 2"
+    },
+    {
+      "name": "COUNTIFS",
+      "description": "Counts cells meeting multiple criteria",
+      "parameters": {
+        "criteriaRanges": { "type": "array", "required": true, "description": "[[range1, criteria1], [range2, criteria2], ...]" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MAX",
+      "description": "Returns the largest number in a range",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MIN",
+      "description": "Returns the smallest number in a range",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MEDIAN",
+      "description": "Returns the median of numbers",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MODE",
+      "description": "Returns the most frequently occurring value",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "STDEV",
+      "description": "Calculates standard deviation (sample)",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "STDEVP",
+      "description": "Calculates standard deviation (population)",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "VAR",
+      "description": "Calculates variance (sample)",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "VARP",
+      "description": "Calculates variance (population)",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SUMIF",
+      "description": "Sums values meeting a condition",
+      "parameters": {
+        "range": { "type": "array", "required": true },
+        "criteria": { "type": "string", "required": true },
+        "sumRange": { "type": "array", "description": "Values to sum (if different from range)" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SUMIFS",
+      "description": "Sums values meeting multiple conditions",
+      "parameters": {
+        "sumRange": { "type": "array", "required": true },
+        "criteriaRanges": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "AVERAGEIF",
+      "description": "Averages values meeting a condition",
+      "parameters": {
+        "range": { "type": "array", "required": true },
+        "criteria": { "type": "string", "required": true },
+        "averageRange": { "type": "array" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ROUND",
+      "description": "Rounds a number to specified decimal places",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "decimals": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" },
+      "example": "ROUND(3.14159, 2) // 3.14"
+    },
+    {
+      "name": "ROUNDUP",
+      "description": "Rounds a number up (away from zero)",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "decimals": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ROUNDDOWN",
+      "description": "Rounds a number down (toward zero)",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "decimals": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "CEILING",
+      "description": "Rounds up to nearest multiple of significance",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "significance": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "FLOOR",
+      "description": "Rounds down to nearest multiple of significance",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "significance": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "TRUNC",
+      "description": "Truncates number to integer (removes decimal)",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "decimals": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "INT",
+      "description": "Rounds down to nearest integer",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ABS",
+      "description": "Returns absolute value of a number",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SIGN",
+      "description": "Returns sign of a number (-1, 0, or 1)",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SQRT",
+      "description": "Returns square root of a number",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "POWER",
+      "description": "Returns number raised to a power",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "power": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" },
+      "example": "POWER(2, 8) // 256"
+    },
+    {
+      "name": "EXP",
+      "description": "Returns e raised to a power",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "LN",
+      "description": "Returns natural logarithm",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "LOG",
+      "description": "Returns logarithm to specified base",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "base": { "type": "number", "default": 10 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "LOG10",
+      "description": "Returns base-10 logarithm",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MOD",
+      "description": "Returns remainder after division",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "divisor": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" },
+      "example": "MOD(10, 3) // 1"
+    },
+    {
+      "name": "QUOTIENT",
+      "description": "Returns integer portion of division",
+      "parameters": {
+        "numerator": { "type": "number", "required": true },
+        "denominator": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "PRODUCT",
+      "description": "Multiplies all numbers in a range",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SUMPRODUCT",
+      "description": "Multiplies corresponding array elements and sums",
+      "parameters": {
+        "arrays": { "type": "array", "required": true, "description": "Array of arrays to multiply and sum" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "GCD",
+      "description": "Returns greatest common divisor",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "LCM",
+      "description": "Returns least common multiple",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "FACT",
+      "description": "Returns factorial of a number",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "COMBIN",
+      "description": "Returns number of combinations",
+      "parameters": {
+        "n": { "type": "number", "required": true },
+        "k": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" },
+      "example": "COMBIN(5, 2) // 10"
+    },
+    {
+      "name": "PERMUT",
+      "description": "Returns number of permutations",
+      "parameters": {
+        "n": { "type": "number", "required": true },
+        "k": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "RAND",
+      "description": "Returns random number between 0 and 1",
+      "parameters": {},
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "RANDBETWEEN",
+      "description": "Returns random integer between bounds",
+      "parameters": {
+        "bottom": { "type": "number", "required": true },
+        "top": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "PI",
+      "description": "Returns value of Pi (3.14159...)",
+      "parameters": {},
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SIN",
+      "description": "Returns sine of angle (radians)",
+      "parameters": {
+        "angle": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "COS",
+      "description": "Returns cosine of angle (radians)",
+      "parameters": {
+        "angle": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "TAN",
+      "description": "Returns tangent of angle (radians)",
+      "parameters": {
+        "angle": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ASIN",
+      "description": "Returns arcsine (radians)",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ACOS",
+      "description": "Returns arccosine (radians)",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ATAN",
+      "description": "Returns arctangent (radians)",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ATAN2",
+      "description": "Returns arctangent from x,y coordinates",
+      "parameters": {
+        "x": { "type": "number", "required": true },
+        "y": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "DEGREES",
+      "description": "Converts radians to degrees",
+      "parameters": {
+        "radians": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "RADIANS",
+      "description": "Converts degrees to radians",
+      "parameters": {
+        "degrees": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "LARGE",
+      "description": "Returns kth largest value in array",
+      "parameters": {
+        "values": { "type": "array", "required": true },
+        "k": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" },
+      "example": "LARGE([1, 5, 3, 9, 7], 2) // 7"
+    },
+    {
+      "name": "SMALL",
+      "description": "Returns kth smallest value in array",
+      "parameters": {
+        "values": { "type": "array", "required": true },
+        "k": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "RANK",
+      "description": "Returns rank of number in a list",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "values": { "type": "array", "required": true },
+        "order": { "type": "number", "default": 0, "description": "0=descending, 1=ascending" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "PERCENTILE",
+      "description": "Returns kth percentile of values",
+      "parameters": {
+        "values": { "type": "array", "required": true },
+        "k": { "type": "number", "required": true, "description": "Percentile (0-1)" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "QUARTILE",
+      "description": "Returns quartile of dataset",
+      "parameters": {
+        "values": { "type": "array", "required": true },
+        "quart": { "type": "number", "required": true, "description": "0=min, 1=25%, 2=median, 3=75%, 4=max" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "IF",
+      "description": "Performs conditional evaluation",
+      "parameters": {
+        "condition": { "type": "boolean", "required": true },
+        "valueIfTrue": { "type": "any", "required": true },
+        "valueIfFalse": { "type": "any", "default": false }
+      },
+      "returns": { "type": "any" },
+      "example": "IF(10 > 5, 'Yes', 'No') // 'Yes'"
+    },
+    {
+      "name": "IFS",
+      "description": "Checks multiple conditions in sequence",
+      "parameters": {
+        "conditions": { "type": "array", "required": true, "description": "[[condition1, value1], [condition2, value2], ...]" }
+      },
+      "returns": { "type": "any" }
+    },
+    {
+      "name": "SWITCH",
+      "description": "Evaluates expression against list of values",
+      "parameters": {
+        "expression": { "type": "any", "required": true },
+        "cases": { "type": "array", "required": true, "description": "[[value1, result1], [value2, result2], ...]" },
+        "defaultValue": { "type": "any" }
+      },
+      "returns": { "type": "any" }
+    },
+    {
+      "name": "AND",
+      "description": "Returns TRUE if all arguments are true",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "OR",
+      "description": "Returns TRUE if any argument is true",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "NOT",
+      "description": "Reverses the logic of its argument",
+      "parameters": {
+        "value": { "type": "boolean", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "XOR",
+      "description": "Returns TRUE if odd number of args are true",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "IFERROR",
+      "description": "Returns alternate value if error",
+      "parameters": {
+        "value": { "type": "any", "required": true },
+        "valueIfError": { "type": "any", "required": true }
+      },
+      "returns": { "type": "any" },
+      "example": "IFERROR(1/0, 'Error occurred')"
+    },
+    {
+      "name": "IFNA",
+      "description": "Returns alternate value if #N/A error",
+      "parameters": {
+        "value": { "type": "any", "required": true },
+        "valueIfNA": { "type": "any", "required": true }
+      },
+      "returns": { "type": "any" }
+    },
+    {
+      "name": "ISBLANK",
+      "description": "Returns TRUE if value is blank/null/undefined",
+      "parameters": {
+        "value": { "type": "any", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "ISNUMBER",
+      "description": "Returns TRUE if value is a number",
+      "parameters": {
+        "value": { "type": "any", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "ISTEXT",
+      "description": "Returns TRUE if value is text",
+      "parameters": {
+        "value": { "type": "any", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "ISLOGICAL",
+      "description": "Returns TRUE if value is boolean",
+      "parameters": {
+        "value": { "type": "any", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "ISERROR",
+      "description": "Returns TRUE if value is an error",
+      "parameters": {
+        "value": { "type": "any", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "ISEVEN",
+      "description": "Returns TRUE if number is even",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "ISODD",
+      "description": "Returns TRUE if number is odd",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "TRUE",
+      "description": "Returns logical TRUE",
+      "parameters": {},
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "FALSE",
+      "description": "Returns logical FALSE",
+      "parameters": {},
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "LEFT",
+      "description": "Extracts characters from start of string",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "numChars": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "string" },
+      "example": "LEFT('Excel', 2) // 'Ex'"
+    },
+    {
+      "name": "RIGHT",
+      "description": "Extracts characters from end of string",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "numChars": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "MID",
+      "description": "Extracts characters from middle of string",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "startNum": { "type": "number", "required": true, "description": "1-based start position" },
+        "numChars": { "type": "number", "required": true }
+      },
+      "returns": { "type": "string" },
+      "example": "MID('FlowForge', 5, 5) // 'Forge'"
+    },
+    {
+      "name": "LEN",
+      "description": "Returns length of string",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "FIND",
+      "description": "Finds text within text (case-sensitive)",
+      "parameters": {
+        "findText": { "type": "string", "required": true },
+        "withinText": { "type": "string", "required": true },
+        "startNum": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "number", "description": "1-based position or error if not found" }
+    },
+    {
+      "name": "SEARCH",
+      "description": "Finds text within text (case-insensitive)",
+      "parameters": {
+        "findText": { "type": "string", "required": true },
+        "withinText": { "type": "string", "required": true },
+        "startNum": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "CONCAT",
+      "description": "Concatenates multiple strings",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "CONCATENATE",
+      "description": "Concatenates multiple strings (legacy)",
+      "parameters": {
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "TEXTJOIN",
+      "description": "Joins text with delimiter",
+      "parameters": {
+        "delimiter": { "type": "string", "required": true },
+        "ignoreEmpty": { "type": "boolean", "default": false },
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "string" },
+      "example": "TEXTJOIN(', ', true, ['a', '', 'b', 'c']) // 'a, b, c'"
+    },
+    {
+      "name": "TRIM",
+      "description": "Removes extra spaces (leaves single spaces between words)",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "CLEAN",
+      "description": "Removes non-printable characters",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "UPPER",
+      "description": "Converts text to uppercase",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "LOWER",
+      "description": "Converts text to lowercase",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "PROPER",
+      "description": "Capitalizes first letter of each word",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string" },
+      "example": "PROPER('hello world') // 'Hello World'"
+    },
+    {
+      "name": "SUBSTITUTE",
+      "description": "Replaces occurrences of text",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "oldText": { "type": "string", "required": true },
+        "newText": { "type": "string", "required": true },
+        "instanceNum": { "type": "number", "description": "Which instance to replace (all if omitted)" }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "REPLACE",
+      "description": "Replaces part of text by position",
+      "parameters": {
+        "oldText": { "type": "string", "required": true },
+        "startNum": { "type": "number", "required": true },
+        "numChars": { "type": "number", "required": true },
+        "newText": { "type": "string", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "REPT",
+      "description": "Repeats text a specified number of times",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "times": { "type": "number", "required": true }
+      },
+      "returns": { "type": "string" },
+      "example": "REPT('*', 5) // '*****'"
+    },
+    {
+      "name": "TEXT",
+      "description": "Formats number as text with format string",
+      "parameters": {
+        "value": { "type": "number", "required": true },
+        "format": { "type": "string", "required": true, "description": "Format like '0.00', '#,##0', '$#,##0.00'" }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "VALUE",
+      "description": "Converts text to number",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "FIXED",
+      "description": "Formats number as text with fixed decimals",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "decimals": { "type": "number", "default": 2 },
+        "noCommas": { "type": "boolean", "default": false }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "DOLLAR",
+      "description": "Formats number as currency text",
+      "parameters": {
+        "number": { "type": "number", "required": true },
+        "decimals": { "type": "number", "default": 2 }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "CHAR",
+      "description": "Returns character from ASCII code",
+      "parameters": {
+        "number": { "type": "number", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "CODE",
+      "description": "Returns ASCII code of first character",
+      "parameters": {
+        "text": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "EXACT",
+      "description": "Checks if two strings are exactly equal (case-sensitive)",
+      "parameters": {
+        "text1": { "type": "string", "required": true },
+        "text2": { "type": "string", "required": true }
+      },
+      "returns": { "type": "boolean" }
+    },
+    {
+      "name": "TEXTSPLIT",
+      "description": "Splits text by delimiter into array",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "colDelimiter": { "type": "string", "required": true },
+        "rowDelimiter": { "type": "string" }
+      },
+      "returns": { "type": "array" }
+    },
+    {
+      "name": "TEXTBEFORE",
+      "description": "Returns text before delimiter",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "delimiter": { "type": "string", "required": true },
+        "instanceNum": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "TEXTAFTER",
+      "description": "Returns text after delimiter",
+      "parameters": {
+        "text": { "type": "string", "required": true },
+        "delimiter": { "type": "string", "required": true },
+        "instanceNum": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "TODAY",
+      "description": "Returns current date",
+      "parameters": {},
+      "returns": { "type": "string", "description": "ISO date string (YYYY-MM-DD)" }
+    },
+    {
+      "name": "NOW",
+      "description": "Returns current date and time",
+      "parameters": {},
+      "returns": { "type": "string", "description": "ISO datetime string" }
+    },
+    {
+      "name": "DATE",
+      "description": "Creates date from year, month, day",
+      "parameters": {
+        "year": { "type": "number", "required": true },
+        "month": { "type": "number", "required": true },
+        "day": { "type": "number", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "DATEVALUE",
+      "description": "Converts date text to serial number",
+      "parameters": {
+        "dateText": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "TIME",
+      "description": "Creates time from hour, minute, second",
+      "parameters": {
+        "hour": { "type": "number", "required": true },
+        "minute": { "type": "number", "required": true },
+        "second": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "TIMEVALUE",
+      "description": "Converts time text to decimal",
+      "parameters": {
+        "timeText": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "YEAR",
+      "description": "Extracts year from date",
+      "parameters": {
+        "date": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MONTH",
+      "description": "Extracts month (1-12) from date",
+      "parameters": {
+        "date": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "DAY",
+      "description": "Extracts day of month from date",
+      "parameters": {
+        "date": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "HOUR",
+      "description": "Extracts hour from time",
+      "parameters": {
+        "time": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MINUTE",
+      "description": "Extracts minute from time",
+      "parameters": {
+        "time": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SECOND",
+      "description": "Extracts second from time",
+      "parameters": {
+        "time": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "WEEKDAY",
+      "description": "Returns day of week (1-7)",
+      "parameters": {
+        "date": { "type": "string", "required": true },
+        "returnType": { "type": "number", "default": 1, "description": "1=Sun-Sat, 2=Mon-Sun, 3=Mon=0" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "WEEKNUM",
+      "description": "Returns week number of year",
+      "parameters": {
+        "date": { "type": "string", "required": true },
+        "returnType": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ISOWEEKNUM",
+      "description": "Returns ISO week number",
+      "parameters": {
+        "date": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "DATEDIF",
+      "description": "Calculates difference between dates",
+      "parameters": {
+        "startDate": { "type": "string", "required": true },
+        "endDate": { "type": "string", "required": true },
+        "unit": { "type": "string", "required": true, "description": "'Y','M','D','MD','YM','YD'" }
+      },
+      "returns": { "type": "number" },
+      "example": "DATEDIF('2020-01-01', '2023-06-15', 'Y') // 3"
+    },
+    {
+      "name": "DAYS",
+      "description": "Returns days between two dates",
+      "parameters": {
+        "endDate": { "type": "string", "required": true },
+        "startDate": { "type": "string", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "DAYS360",
+      "description": "Returns days based on 360-day year",
+      "parameters": {
+        "startDate": { "type": "string", "required": true },
+        "endDate": { "type": "string", "required": true },
+        "method": { "type": "boolean", "default": false, "description": "false=US, true=European" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "EDATE",
+      "description": "Returns date n months away",
+      "parameters": {
+        "startDate": { "type": "string", "required": true },
+        "months": { "type": "number", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "EOMONTH",
+      "description": "Returns last day of month n months away",
+      "parameters": {
+        "startDate": { "type": "string", "required": true },
+        "months": { "type": "number", "required": true }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "WORKDAY",
+      "description": "Returns date n workdays away",
+      "parameters": {
+        "startDate": { "type": "string", "required": true },
+        "days": { "type": "number", "required": true },
+        "holidays": { "type": "array", "description": "Array of holiday dates to exclude" }
+      },
+      "returns": { "type": "string" }
+    },
+    {
+      "name": "NETWORKDAYS",
+      "description": "Returns workdays between dates",
+      "parameters": {
+        "startDate": { "type": "string", "required": true },
+        "endDate": { "type": "string", "required": true },
+        "holidays": { "type": "array" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "YEARFRAC",
+      "description": "Returns fraction of year between dates",
+      "parameters": {
+        "startDate": { "type": "string", "required": true },
+        "endDate": { "type": "string", "required": true },
+        "basis": { "type": "number", "default": 0, "description": "Day count basis (0-4)" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "PMT",
+      "description": "Calculates periodic loan/annuity payment",
+      "parameters": {
+        "rate": { "type": "number", "required": true, "description": "Interest rate per period" },
+        "nper": { "type": "number", "required": true, "description": "Total number of periods" },
+        "pv": { "type": "number", "required": true, "description": "Present value (loan amount)" },
+        "fv": { "type": "number", "default": 0, "description": "Future value" },
+        "type": { "type": "number", "default": 0, "description": "0=end of period, 1=beginning" }
+      },
+      "returns": { "type": "number" },
+      "example": "PMT(0.05/12, 360, 200000) // -1073.64 (monthly payment for $200k, 5%, 30yr)"
+    },
+    {
+      "name": "PPMT",
+      "description": "Returns principal payment for a period",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "per": { "type": "number", "required": true, "description": "Period number" },
+        "nper": { "type": "number", "required": true },
+        "pv": { "type": "number", "required": true },
+        "fv": { "type": "number", "default": 0 },
+        "type": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "IPMT",
+      "description": "Returns interest payment for a period",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "per": { "type": "number", "required": true },
+        "nper": { "type": "number", "required": true },
+        "pv": { "type": "number", "required": true },
+        "fv": { "type": "number", "default": 0 },
+        "type": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "CUMIPMT",
+      "description": "Returns cumulative interest paid between periods",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "nper": { "type": "number", "required": true },
+        "pv": { "type": "number", "required": true },
+        "startPeriod": { "type": "number", "required": true },
+        "endPeriod": { "type": "number", "required": true },
+        "type": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "CUMPRINC",
+      "description": "Returns cumulative principal paid between periods",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "nper": { "type": "number", "required": true },
+        "pv": { "type": "number", "required": true },
+        "startPeriod": { "type": "number", "required": true },
+        "endPeriod": { "type": "number", "required": true },
+        "type": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "PV",
+      "description": "Calculates present value of investment",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "nper": { "type": "number", "required": true },
+        "pmt": { "type": "number", "required": true },
+        "fv": { "type": "number", "default": 0 },
+        "type": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "FV",
+      "description": "Calculates future value of investment",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "nper": { "type": "number", "required": true },
+        "pmt": { "type": "number", "required": true },
+        "pv": { "type": "number", "default": 0 },
+        "type": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" },
+      "example": "FV(0.08/12, 120, -100, 0) // Future value of $100/month for 10 years at 8%"
+    },
+    {
+      "name": "NPV",
+      "description": "Calculates net present value",
+      "parameters": {
+        "rate": { "type": "number", "required": true, "description": "Discount rate per period" },
+        "values": { "type": "array", "required": true, "description": "Array of cash flows" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "XNPV",
+      "description": "Calculates NPV for irregular cash flows",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "values": { "type": "array", "required": true },
+        "dates": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "IRR",
+      "description": "Calculates internal rate of return",
+      "parameters": {
+        "values": { "type": "array", "required": true, "description": "Cash flows (must contain at least one negative and one positive)" },
+        "guess": { "type": "number", "default": 0.1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "XIRR",
+      "description": "Calculates IRR for irregular cash flows",
+      "parameters": {
+        "values": { "type": "array", "required": true },
+        "dates": { "type": "array", "required": true },
+        "guess": { "type": "number", "default": 0.1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "MIRR",
+      "description": "Calculates modified internal rate of return",
+      "parameters": {
+        "values": { "type": "array", "required": true },
+        "financeRate": { "type": "number", "required": true },
+        "reinvestRate": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "RATE",
+      "description": "Calculates interest rate per period",
+      "parameters": {
+        "nper": { "type": "number", "required": true },
+        "pmt": { "type": "number", "required": true },
+        "pv": { "type": "number", "required": true },
+        "fv": { "type": "number", "default": 0 },
+        "type": { "type": "number", "default": 0 },
+        "guess": { "type": "number", "default": 0.1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "NPER",
+      "description": "Calculates number of periods",
+      "parameters": {
+        "rate": { "type": "number", "required": true },
+        "pmt": { "type": "number", "required": true },
+        "pv": { "type": "number", "required": true },
+        "fv": { "type": "number", "default": 0 },
+        "type": { "type": "number", "default": 0 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "EFFECT",
+      "description": "Calculates effective annual interest rate",
+      "parameters": {
+        "nominalRate": { "type": "number", "required": true },
+        "npery": { "type": "number", "required": true, "description": "Compounding periods per year" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "NOMINAL",
+      "description": "Calculates nominal annual interest rate",
+      "parameters": {
+        "effectRate": { "type": "number", "required": true },
+        "npery": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SLN",
+      "description": "Straight-line depreciation",
+      "parameters": {
+        "cost": { "type": "number", "required": true },
+        "salvage": { "type": "number", "required": true },
+        "life": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "SYD",
+      "description": "Sum-of-years' digits depreciation",
+      "parameters": {
+        "cost": { "type": "number", "required": true },
+        "salvage": { "type": "number", "required": true },
+        "life": { "type": "number", "required": true },
+        "per": { "type": "number", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "DB",
+      "description": "Fixed-declining balance depreciation",
+      "parameters": {
+        "cost": { "type": "number", "required": true },
+        "salvage": { "type": "number", "required": true },
+        "life": { "type": "number", "required": true },
+        "period": { "type": "number", "required": true },
+        "month": { "type": "number", "default": 12 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "DDB",
+      "description": "Double-declining balance depreciation",
+      "parameters": {
+        "cost": { "type": "number", "required": true },
+        "salvage": { "type": "number", "required": true },
+        "life": { "type": "number", "required": true },
+        "period": { "type": "number", "required": true },
+        "factor": { "type": "number", "default": 2 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "VLOOKUP",
+      "description": "Vertical lookup - searches first column, returns value from specified column",
+      "parameters": {
+        "lookupValue": { "type": "any", "required": true },
+        "tableArray": { "type": "array", "required": true, "description": "2D array to search" },
+        "colIndex": { "type": "number", "required": true, "description": "1-based column to return" },
+        "rangeLookup": { "type": "boolean", "default": true, "description": "true=approximate, false=exact" }
+      },
+      "returns": { "type": "any" },
+      "example": "VLOOKUP('Apple', [['Apple', 1.50], ['Banana', 0.75]], 2, false) // 1.50"
+    },
+    {
+      "name": "HLOOKUP",
+      "description": "Horizontal lookup - searches first row, returns value from specified row",
+      "parameters": {
+        "lookupValue": { "type": "any", "required": true },
+        "tableArray": { "type": "array", "required": true },
+        "rowIndex": { "type": "number", "required": true },
+        "rangeLookup": { "type": "boolean", "default": true }
+      },
+      "returns": { "type": "any" }
+    },
+    {
+      "name": "XLOOKUP",
+      "description": "Modern lookup - searches any row/column, returns from corresponding position",
+      "parameters": {
+        "lookupValue": { "type": "any", "required": true },
+        "lookupArray": { "type": "array", "required": true },
+        "returnArray": { "type": "array", "required": true },
+        "ifNotFound": { "type": "any", "default": null },
+        "matchMode": { "type": "number", "default": 0, "description": "0=exact, -1=exact or smaller, 1=exact or larger, 2=wildcard" },
+        "searchMode": { "type": "number", "default": 1, "description": "1=first-to-last, -1=last-to-first" }
+      },
+      "returns": { "type": "any" }
+    },
+    {
+      "name": "INDEX",
+      "description": "Returns value at row/column intersection",
+      "parameters": {
+        "array": { "type": "array", "required": true },
+        "rowNum": { "type": "number", "required": true },
+        "colNum": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "any" },
+      "example": "INDEX([[1,2,3],[4,5,6]], 2, 3) // 6"
+    },
+    {
+      "name": "MATCH",
+      "description": "Returns position of value in array",
+      "parameters": {
+        "lookupValue": { "type": "any", "required": true },
+        "lookupArray": { "type": "array", "required": true },
+        "matchType": { "type": "number", "default": 1, "description": "1=less than, 0=exact, -1=greater than" }
+      },
+      "returns": { "type": "number", "description": "1-based position" }
+    },
+    {
+      "name": "XMATCH",
+      "description": "Modern MATCH with more options",
+      "parameters": {
+        "lookupValue": { "type": "any", "required": true },
+        "lookupArray": { "type": "array", "required": true },
+        "matchMode": { "type": "number", "default": 0 },
+        "searchMode": { "type": "number", "default": 1 }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "CHOOSE",
+      "description": "Returns value from list based on index",
+      "parameters": {
+        "indexNum": { "type": "number", "required": true },
+        "values": { "type": "array", "required": true }
+      },
+      "returns": { "type": "any" },
+      "example": "CHOOSE(2, ['a', 'b', 'c']) // 'b'"
+    },
+    {
+      "name": "LOOKUP",
+      "description": "Looks up value in one range, returns from another",
+      "parameters": {
+        "lookupValue": { "type": "any", "required": true },
+        "lookupVector": { "type": "array", "required": true },
+        "resultVector": { "type": "array" }
+      },
+      "returns": { "type": "any" }
+    },
+    {
+      "name": "OFFSET",
+      "description": "Returns range offset from starting reference",
+      "parameters": {
+        "array": { "type": "array", "required": true },
+        "rows": { "type": "number", "required": true },
+        "cols": { "type": "number", "required": true },
+        "height": { "type": "number" },
+        "width": { "type": "number" }
+      },
+      "returns": { "type": "any" }
+    },
+    {
+      "name": "ROW",
+      "description": "Returns row number of reference",
+      "parameters": {
+        "rowIndex": { "type": "number", "description": "If omitted, returns current row" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "COLUMN",
+      "description": "Returns column number of reference",
+      "parameters": {
+        "colIndex": { "type": "number" }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "ROWS",
+      "description": "Returns number of rows in array",
+      "parameters": {
+        "array": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "COLUMNS",
+      "description": "Returns number of columns in array",
+      "parameters": {
+        "array": { "type": "array", "required": true }
+      },
+      "returns": { "type": "number" }
+    },
+    {
+      "name": "TRANSPOSE",
+      "description": "Transposes rows and columns of array",
+      "parameters": {
+        "array": { "type": "array", "required": true }
+      },
+      "returns": { "type": "array" }
+    },
+    {
+      "name": "SORT",
+      "description": "Sorts array contents",
+      "parameters": {
+        "array": { "type": "array", "required": true },
+        "sortIndex": { "type": "number", "default": 1 },
+        "sortOrder": { "type": "number", "default": 1, "description": "1=ascending, -1=descending" },
+        "byCol": { "type": "boolean", "default": false }
+      },
+      "returns": { "type": "array" }
+    },
+    {
+      "name": "FILTER",
+      "description": "Filters array based on criteria",
+      "parameters": {
+        "array": { "type": "array", "required": true },
+        "include": { "type": "array", "required": true, "description": "Boolean array of same size" },
+        "ifEmpty": { "type": "any" }
+      },
+      "returns": { "type": "array" }
+    },
+    {
+      "name": "UNIQUE",
+      "description": "Returns unique values from array",
+      "parameters": {
+        "array": { "type": "array", "required": true },
+        "byCol": { "type": "boolean", "default": false },
+        "exactlyOnce": { "type": "boolean", "default": false }
+      },
+      "returns": { "type": "array" }
+    }
+  ],
+
+  "config": {
+    "schema": {
+      "type": "object",
+      "properties": {
+        "dateFormat": {
+          "type": "string",
+          "default": "ISO",
+          "enum": ["ISO", "US", "EU"],
+          "description": "Default date format for parsing"
+        },
+        "decimalSeparator": {
+          "type": "string",
+          "default": ".",
+          "enum": [".", ","]
+        },
+        "thousandsSeparator": {
+          "type": "string",
+          "default": ",",
+          "enum": [",", ".", " "]
+        },
+        "currencySymbol": {
+          "type": "string",
+          "default": "$"
+        },
+        "weekStartsOn": {
+          "type": "integer",
+          "default": 0,
+          "description": "0=Sunday, 1=Monday"
+        }
+      }
+    },
+    "defaults": {
+      "dateFormat": "ISO",
+      "decimalSeparator": ".",
+      "thousandsSeparator": ",",
+      "currencySymbol": "$",
+      "weekStartsOn": 0
+    }
+  }
+}
