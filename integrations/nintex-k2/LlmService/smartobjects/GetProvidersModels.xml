@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SmartObjectDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>GetProvidersModels</Name>
+  <DisplayName>FlowForge llm-service - GetProvidersModels</DisplayName>
+  <Description>List available models for a provider</Description>
+  <SystemName>FlowForge.LlmService.GetProvidersModels</SystemName>
+  <ServiceInstance>FlowForge_LlmService</ServiceInstance>
+  <Methods>
+    <Method>
+      <Name>Execute</Name>
+      <Type>Execute</Type>
+      <Description>Execute operation</Description>
+      <Parameters>
+        <!-- Define input parameters based on endpoint -->
+      </Parameters>
+      <ReturnProperties>
+        <!-- Define output properties based on response -->
+      </ReturnProperties>
+    </Method>
+  </Methods>
+</SmartObjectDefinition>

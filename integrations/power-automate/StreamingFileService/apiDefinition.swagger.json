@@ -1,0 +1,1003 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "FlowForge streaming-file-service",
+    "description": "FlowForge plugin",
+    "version": "1.0.0",
+    "contact": {
+      "name": "FlowForge Support",
+      "url": "https://flowforge.io"
+    }
+  },
+  "host": "{{HOST}}",
+  "basePath": "/api/v1",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "X-API-Key",
+      "description": "FlowForge API Key"
+    }
+  },
+  "security": [
+    {
+      "api_key": []
+    }
+  ],
+  "paths": {
+    "/upload/init": {
+      "post": {
+        "operationId": "PostUploadInit",
+        "summary": "",
+        "description": "Initialize a chunked upload session. Returns uploadId for subsequent chunk uploads.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/upload/{uploadId}/chunk/{chunkIndex}": {
+      "put": {
+        "operationId": "PutUploadChunk",
+        "summary": "",
+        "description": "Upload a single chunk. Supports resume - re-upload failed chunks.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "binary chunk data"
+            }
+          },
+          {
+            "in": "path",
+            "name": "uploadId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: uploadId"
+          },
+          {
+            "in": "path",
+            "name": "chunkIndex",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: chunkIndex"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/upload/{uploadId}/complete": {
+      "post": {
+        "operationId": "PostUploadComplete",
+        "summary": "",
+        "description": "Complete chunked upload - assembles chunks and verifies integrity.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          },
+          {
+            "in": "path",
+            "name": "uploadId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: uploadId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/upload/{uploadId}/status": {
+      "get": {
+        "operationId": "GetUploadStatus",
+        "summary": "",
+        "description": "Get upload progress - which chunks received, resume point.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uploadId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: uploadId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/upload/{uploadId}": {
+      "delete": {
+        "operationId": "DeleteUpload",
+        "summary": "",
+        "description": "Cancel and cleanup an incomplete upload.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "uploadId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: uploadId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/download/{fileId}": {
+      "get": {
+        "operationId": "GetDownload",
+        "summary": "",
+        "description": "Stream download with Range header support for resume.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: fileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/download/init": {
+      "post": {
+        "operationId": "PostDownloadInit",
+        "summary": "",
+        "description": "Initialize chunked download - get download manifest.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/cloud/upload": {
+      "post": {
+        "operationId": "PostCloudUpload",
+        "summary": "",
+        "description": "Stream upload directly to cloud storage (S3/Azure/GCS) without storing locally.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/cloud/download": {
+      "post": {
+        "operationId": "PostCloudDownload",
+        "summary": "",
+        "description": "Stream download from cloud storage to local or another destination.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/cloud/copy": {
+      "post": {
+        "operationId": "PostCloudCopy",
+        "summary": "",
+        "description": "Copy files between cloud providers (S3 to Azure, GCS to S3, etc.).",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/cloud/presigned-url": {
+      "post": {
+        "operationId": "PostCloudPresignedUrl",
+        "summary": "",
+        "description": "Generate presigned URLs for direct browser uploads/downloads.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/split-pdf": {
+      "post": {
+        "operationId": "PostTransformSplitPdf",
+        "summary": "",
+        "description": "Split large PDF into smaller files by page ranges.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/merge-pdf": {
+      "post": {
+        "operationId": "PostTransformMergePdf",
+        "summary": "",
+        "description": "Merge multiple PDFs into one.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/compress": {
+      "post": {
+        "operationId": "PostTransformCompress",
+        "summary": "",
+        "description": "Compress files (zip, gzip, tar.gz) with streaming.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/extract": {
+      "post": {
+        "operationId": "PostTransformExtract",
+        "summary": "",
+        "description": "Extract compressed archives with streaming.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/transcode": {
+      "post": {
+        "operationId": "PostTransformTranscode",
+        "summary": "",
+        "description": "Transcode video/audio files. Runs asynchronously for large files.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/extract-audio": {
+      "post": {
+        "operationId": "PostTransformExtractAudio",
+        "summary": "",
+        "description": "Extract audio track from video file.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/thumbnail": {
+      "post": {
+        "operationId": "PostTransformThumbnail",
+        "summary": "",
+        "description": "Generate thumbnails from video at specified timestamps.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transform/status/{jobId}": {
+      "get": {
+        "operationId": "GetTransformStatus",
+        "summary": "",
+        "description": "Check status of async transformation job.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "jobId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: jobId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/checksum": {
+      "post": {
+        "operationId": "PostChecksum",
+        "summary": "",
+        "description": "Calculate checksum of file without loading into memory.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/diff": {
+      "post": {
+        "operationId": "PostDiff",
+        "summary": "",
+        "description": "Binary diff between two files for delta sync.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/pipe": {
+      "post": {
+        "operationId": "PostPipe",
+        "summary": "",
+        "description": "Pipe data between sources - URL to cloud, cloud to webhook, file to email, etc.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request body",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/{fileId}": {
+      "delete": {
+        "operationId": "Delete",
+        "summary": "",
+        "description": "Delete a file from temporary storage.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: fileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/{fileId}/metadata": {
+      "get": {
+        "operationId": "GetMetadata",
+        "summary": "",
+        "description": "Get file metadata without downloading.",
+        "tags": [
+          "General"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "fileId",
+            "type": "string",
+            "required": true,
+            "description": "Path parameter: fileId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "GetHealth",
+        "summary": "",
+        "description": "Health check endpoint",
+        "tags": [
+          "General"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {},
+  "x-ms-connector-metadata": [
+    {
+      "propertyName": "Website",
+      "propertyValue": "https://flowforge.io"
+    },
+    {
+      "propertyName": "Privacy policy",
+      "propertyValue": "https://flowforge.io/privacy"
+    },
+    {
+      "propertyName": "Categories",
+      "propertyValue": "AI;Productivity"
+    }
+  ]
+}

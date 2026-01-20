@@ -1,0 +1,36 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "FlowForge formula-engine",
+    "description": "FlowForge plugin",
+    "version": "1.0.0",
+    "contact": {
+      "name": "FlowForge Support",
+      "url": "https://flowforge.io"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{{HOST}}/api/v1",
+      "description": "FlowForge API Server"
+    }
+  ],
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "FlowForge API Key"
+      }
+    },
+    "schemas": {}
+  },
+  "paths": {},
+  "tags": []
+}

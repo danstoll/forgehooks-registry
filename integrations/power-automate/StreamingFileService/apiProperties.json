@@ -1,0 +1,21 @@
+{
+  "properties": {
+    "connectionParameters": {
+      "api_key": {
+        "type": "securestring",
+        "uiDefinition": {
+          "displayName": "API Key",
+          "description": "Your FlowForge API Key",
+          "tooltip": "Enter your FlowForge API Key",
+          "constraints": {
+            "required": "true",
+            "clearText": false
+          }
+        }
+      }
+    },
+    "iconBrandColor": "#f59e0b",
+    "capabilities": [],
+    "policyTemplateInstances": []
+  }
+}

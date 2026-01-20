@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SmartObjectDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>PostProvidersConfigure</Name>
+  <DisplayName>FlowForge llm-service - PostProvidersConfigure</DisplayName>
+  <Description>Configure a provider with API credentials</Description>
+  <SystemName>FlowForge.LlmService.PostProvidersConfigure</SystemName>
+  <ServiceInstance>FlowForge_LlmService</ServiceInstance>
+  <Methods>
+    <Method>
+      <Name>Execute</Name>
+      <Type>Execute</Type>
+      <Description>Execute operation</Description>
+      <Parameters>
+        <!-- Define input parameters based on endpoint -->
+      </Parameters>
+      <ReturnProperties>
+        <!-- Define output properties based on response -->
+      </ReturnProperties>
+    </Method>
+  </Methods>
+</SmartObjectDefinition>
