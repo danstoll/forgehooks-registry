@@ -2,7 +2,7 @@
   "$schema": "../../forgehook-schema.json",
   "id": "pdf-service",
   "name": "PDF Service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "PDF document processing including text extraction, merging, splitting, compression, conversion, and watermarking",
   "author": {
     "name": "FlowForge",

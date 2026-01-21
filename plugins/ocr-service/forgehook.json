@@ -2,7 +2,7 @@
   "$schema": "../../forgehook-schema.json",
   "id": "ocr-service",
   "name": "OCR Service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Optical Character Recognition for extracting text from images, supporting multiple languages and OCR engines",
   "author": {
     "name": "FlowForge",

@@ -2,7 +2,7 @@
   "$schema": "../../forgehook-schema.json",
   "id": "image-service",
   "name": "Image Service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Image processing operations including resize, crop, rotate, filters, format conversion, and metadata extraction",
   "author": {
     "name": "FlowForge",

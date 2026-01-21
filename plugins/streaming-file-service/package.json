@@ -1,6 +1,6 @@
 {
   "name": "streaming-file-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Enterprise-grade large file handling with chunked uploads, resumable transfers, and cloud storage streaming",
   "main": "src/server.js",
   "scripts": {

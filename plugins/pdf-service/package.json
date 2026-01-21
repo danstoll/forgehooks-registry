@@ -1,6 +1,6 @@
 {
   "name": "@flowforge/pdf-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "PDF generation and manipulation service for FlowForge",
   "main": "dist/index.js",
   "type": "commonjs",

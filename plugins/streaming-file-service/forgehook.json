@@ -2,7 +2,7 @@
   "$schema": "../forgehook-schema.json",
   "id": "streaming-file-service",
   "name": "Streaming File Service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Enterprise-grade large file handling with chunked uploads/downloads, resumable transfers, multi-cloud storage streaming (S3, Azure Blob, GCS), and file transformations. Handles files of any size without memory constraints - a critical gap in platforms like Power Automate (limited to 20-40MB).",
   "author": {
     "name": "FlowForge",

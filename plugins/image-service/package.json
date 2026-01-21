@@ -1,6 +1,6 @@
 {
   "name": "@flowforge/image-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Image processing service for FlowForge",
   "main": "dist/index.js",
   "scripts": {

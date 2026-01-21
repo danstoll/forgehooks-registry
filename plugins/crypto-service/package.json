@@ -1,6 +1,6 @@
 {
   "name": "@flowforge/crypto-service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Production-ready cryptographic operations service for FlowForge",
   "main": "dist/index.js",
   "type": "commonjs",

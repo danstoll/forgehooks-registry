@@ -2,7 +2,7 @@
   "$schema": "../../forgehook-schema.json",
   "id": "math-service",
   "name": "Math Service",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Advanced mathematical operations including arithmetic, statistics, matrix operations, equation solving, and numerical analysis",
   "author": {
     "name": "FlowForge",
