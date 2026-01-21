@@ -445,6 +445,225 @@
       },
       "returns": { "type": "boolean", "description": "True if deeply equal" },
       "example": "deepEqual({ a: [1, 2] }, { a: [1, 2] }) // true"
+    },
+    {
+      "name": "toUpperCase",
+      "description": "Convert string to uppercase",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to convert" }
+      },
+      "returns": { "type": "string", "description": "Uppercase string" },
+      "example": "toUpperCase('hello') // 'HELLO'"
+    },
+    {
+      "name": "toLowerCase",
+      "description": "Convert string to lowercase",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to convert" }
+      },
+      "returns": { "type": "string", "description": "Lowercase string" },
+      "example": "toLowerCase('HELLO') // 'hello'"
+    },
+    {
+      "name": "stringLength",
+      "description": "Get the length of a string",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to measure" }
+      },
+      "returns": { "type": "number", "description": "String length" },
+      "example": "stringLength('hello') // 5"
+    },
+    {
+      "name": "trim",
+      "description": "Trim whitespace from string",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to trim" },
+        "direction": { "type": "string", "default": "both", "description": "'both', 'left', or 'right'" }
+      },
+      "returns": { "type": "string", "description": "Trimmed string" },
+      "example": "trim('  hello  ') // 'hello'"
+    },
+    {
+      "name": "replace",
+      "description": "Replace occurrences in a string",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "Input string" },
+        "search": { "type": "string", "required": true, "description": "String to search for" },
+        "replacement": { "type": "string", "required": true, "description": "Replacement string" },
+        "all": { "type": "boolean", "default": true, "description": "Replace all occurrences" }
+      },
+      "returns": { "type": "string", "description": "Modified string" },
+      "example": "replace('hello world', 'world', 'there') // 'hello there'"
+    },
+    {
+      "name": "contains",
+      "description": "Check if string contains a substring",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to search in" },
+        "search": { "type": "string", "required": true, "description": "Substring to find" },
+        "caseSensitive": { "type": "boolean", "default": true, "description": "Case sensitive search" }
+      },
+      "returns": { "type": "boolean", "description": "True if found" },
+      "example": "contains('hello world', 'world') // true"
+    },
+    {
+      "name": "startsWith",
+      "description": "Check if string starts with a prefix",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to check" },
+        "prefix": { "type": "string", "required": true, "description": "Prefix to look for" },
+        "caseSensitive": { "type": "boolean", "default": true, "description": "Case sensitive" }
+      },
+      "returns": { "type": "boolean", "description": "True if starts with prefix" },
+      "example": "startsWith('hello', 'he') // true"
+    },
+    {
+      "name": "endsWith",
+      "description": "Check if string ends with a suffix",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to check" },
+        "suffix": { "type": "string", "required": true, "description": "Suffix to look for" },
+        "caseSensitive": { "type": "boolean", "default": true, "description": "Case sensitive" }
+      },
+      "returns": { "type": "boolean", "description": "True if ends with suffix" },
+      "example": "endsWith('hello', 'lo') // true"
+    },
+    {
+      "name": "split",
+      "description": "Split string into array",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to split" },
+        "delimiter": { "type": "string", "default": ",", "description": "Delimiter" },
+        "limit": { "type": "number", "description": "Maximum number of splits" }
+      },
+      "returns": { "type": "array", "description": "Array of strings" },
+      "example": "split('a,b,c', ',') // ['a', 'b', 'c']"
+    },
+    {
+      "name": "join",
+      "description": "Join array into string",
+      "parameters": {
+        "data": { "type": "array", "required": true, "description": "Array to join" },
+        "delimiter": { "type": "string", "default": ",", "description": "Delimiter" }
+      },
+      "returns": { "type": "string", "description": "Joined string" },
+      "example": "join(['a', 'b', 'c'], '-') // 'a-b-c'"
+    },
+    {
+      "name": "reverse",
+      "description": "Reverse a string",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to reverse" }
+      },
+      "returns": { "type": "string", "description": "Reversed string" },
+      "example": "reverse('hello') // 'olleh'"
+    },
+    {
+      "name": "repeat",
+      "description": "Repeat a string n times",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to repeat" },
+        "count": { "type": "number", "required": true, "description": "Number of repetitions" }
+      },
+      "returns": { "type": "string", "description": "Repeated string" },
+      "example": "repeat('ab', 3) // 'ababab'"
+    },
+    {
+      "name": "substring",
+      "description": "Extract substring from string",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "Source string" },
+        "start": { "type": "number", "required": true, "description": "Start index (0-based)" },
+        "length": { "type": "number", "description": "Length to extract" }
+      },
+      "returns": { "type": "string", "description": "Extracted substring" },
+      "example": "substring('hello', 1, 3) // 'ell'"
+    },
+    {
+      "name": "indexOf",
+      "description": "Find index of substring",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to search in" },
+        "search": { "type": "string", "required": true, "description": "Substring to find" },
+        "fromEnd": { "type": "boolean", "default": false, "description": "Search from end" }
+      },
+      "returns": { "type": "number", "description": "Index of substring, -1 if not found" },
+      "example": "indexOf('hello', 'l') // 2"
+    },
+    {
+      "name": "countOccurrences",
+      "description": "Count occurrences of substring",
+      "parameters": {
+        "data": { "type": "string", "required": true, "description": "String to search in" },
+        "search": { "type": "string", "required": true, "description": "Substring to count" },
+        "caseSensitive": { "type": "boolean", "default": true, "description": "Case sensitive" }
+      },
+      "returns": { "type": "number", "description": "Number of occurrences" },
+      "example": "countOccurrences('hello', 'l') // 2"
+    },
+    {
+      "name": "formatDate",
+      "description": "Format a date/datetime to a specified format",
+      "parameters": {
+        "date": { "type": "string", "required": true, "description": "Date string or ISO date" },
+        "format": { "type": "string", "default": "YYYY-MM-DD", "description": "Output format (YYYY, MM, DD, HH, mm, ss, etc.)" },
+        "timezone": { "type": "string", "default": "UTC", "description": "Timezone" }
+      },
+      "returns": { "type": "string", "description": "Formatted date string" },
+      "example": "formatDate('2024-01-15T10:30:00Z', 'DD/MM/YYYY HH:mm') // '15/01/2024 10:30'"
+    },
+    {
+      "name": "parseDate",
+      "description": "Parse date string to ISO format",
+      "parameters": {
+        "dateStr": { "type": "string", "required": true, "description": "Date string" },
+        "inputFormat": { "type": "string", "description": "Input format hint (DD/MM/YYYY, etc.)" }
+      },
+      "returns": { "type": "string", "description": "ISO date string" },
+      "example": "parseDate('15/01/2024', 'DD/MM/YYYY') // '2024-01-15T00:00:00.000Z'"
+    },
+    {
+      "name": "dateAdd",
+      "description": "Add/subtract time from a date",
+      "parameters": {
+        "date": { "type": "string", "required": true, "description": "Date string" },
+        "amount": { "type": "number", "required": true, "description": "Amount to add (negative to subtract)" },
+        "unit": { "type": "string", "default": "days", "description": "'years', 'months', 'days', 'hours', 'minutes', 'seconds'" }
+      },
+      "returns": { "type": "string", "description": "Modified date as ISO string" },
+      "example": "dateAdd('2024-01-15', 7, 'days') // '2024-01-22T00:00:00.000Z'"
+    },
+    {
+      "name": "dateDiff",
+      "description": "Calculate difference between two dates",
+      "parameters": {
+        "date1": { "type": "string", "required": true, "description": "First date" },
+        "date2": { "type": "string", "required": true, "description": "Second date" },
+        "unit": { "type": "string", "default": "days", "description": "'days', 'hours', 'minutes', 'seconds'" }
+      },
+      "returns": { "type": "number", "description": "Difference in specified unit" },
+      "example": "dateDiff('2024-01-01', '2024-01-15', 'days') // 14"
+    },
+    {
+      "name": "workingDays",
+      "description": "Calculate working days between two dates (excludes weekends)",
+      "parameters": {
+        "startDate": { "type": "string", "required": true, "description": "Start date" },
+        "endDate": { "type": "string", "required": true, "description": "End date" },
+        "holidays": { "type": "array", "description": "Array of holiday dates to exclude" }
+      },
+      "returns": { "type": "number", "description": "Number of working days" },
+      "example": "workingDays('2024-01-01', '2024-01-15') // 11"
+    },
+    {
+      "name": "now",
+      "description": "Get current date/time",
+      "parameters": {
+        "format": { "type": "string", "default": "ISO", "description": "Output format ('ISO', 'timestamp', or date format)" },
+        "timezone": { "type": "string", "default": "UTC", "description": "Timezone" }
+      },
+      "returns": { "type": "string", "description": "Current date/time" },
+      "example": "now('YYYY-MM-DD') // '2024-01-20'"
     }
   ],
 

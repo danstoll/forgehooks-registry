@@ -1654,6 +1654,453 @@ function _iniValue(value) {
 }
 
 // ============================================================================
+// SIMPLE STRING UTILITIES (NWC Toolkit Compatible)
+// ============================================================================
+
+/**
+ * Convert string to uppercase
+ * @param {string} data - String to convert
+ * @returns {string} Uppercase string
+ */
+function toUpperCase(data) {
+  return String(data).toUpperCase();
+}
+
+/**
+ * Convert string to lowercase
+ * @param {string} data - String to convert
+ * @returns {string} Lowercase string
+ */
+function toLowerCase(data) {
+  return String(data).toLowerCase();
+}
+
+/**
+ * Get the length of a string
+ * @param {string} data - String to measure
+ * @returns {number} String length
+ */
+function stringLength(data) {
+  return String(data).length;
+}
+
+/**
+ * Trim whitespace from string (both ends, left, or right)
+ * @param {string} data - String to trim
+ * @param {string} direction - 'both', 'left', 'right' (default: 'both')
+ * @returns {string} Trimmed string
+ */
+function trim(data, direction = 'both') {
+  const str = String(data);
+  switch (direction.toLowerCase()) {
+    case 'left':
+    case 'start':
+      return str.trimStart();
+    case 'right':
+    case 'end':
+      return str.trimEnd();
+    case 'both':
+    default:
+      return str.trim();
+  }
+}
+
+/**
+ * Replace occurrences in a string
+ * @param {string} data - Input string
+ * @param {string} search - String to search for
+ * @param {string} replacement - Replacement string
+ * @param {boolean} all - Replace all occurrences (default: true)
+ * @returns {string} Modified string
+ */
+function replace(data, search, replacement, all = true) {
+  const str = String(data);
+  if (all) {
+    return str.split(search).join(replacement);
+  }
+  return str.replace(search, replacement);
+}
+
+/**
+ * Check if string contains a substring
+ * @param {string} data - String to search in
+ * @param {string} search - Substring to find
+ * @param {boolean} caseSensitive - Case sensitive search (default: true)
+ * @returns {boolean} True if found
+ */
+function contains(data, search, caseSensitive = true) {
+  const str = String(data);
+  const needle = String(search);
+  if (caseSensitive) {
+    return str.includes(needle);
+  }
+  return str.toLowerCase().includes(needle.toLowerCase());
+}
+
+/**
+ * Check if string starts with a prefix
+ * @param {string} data - String to check
+ * @param {string} prefix - Prefix to look for
+ * @param {boolean} caseSensitive - Case sensitive (default: true)
+ * @returns {boolean} True if starts with prefix
+ */
+function startsWith(data, prefix, caseSensitive = true) {
+  const str = String(data);
+  const pre = String(prefix);
+  if (caseSensitive) {
+    return str.startsWith(pre);
+  }
+  return str.toLowerCase().startsWith(pre.toLowerCase());
+}
+
+/**
+ * Check if string ends with a suffix
+ * @param {string} data - String to check
+ * @param {string} suffix - Suffix to look for
+ * @param {boolean} caseSensitive - Case sensitive (default: true)
+ * @returns {boolean} True if ends with suffix
+ */
+function endsWith(data, suffix, caseSensitive = true) {
+  const str = String(data);
+  const suf = String(suffix);
+  if (caseSensitive) {
+    return str.endsWith(suf);
+  }
+  return str.toLowerCase().endsWith(suf.toLowerCase());
+}
+
+/**
+ * Split string into array
+ * @param {string} data - String to split
+ * @param {string} delimiter - Delimiter (default: ',')
+ * @param {number} limit - Maximum number of splits
+ * @returns {array} Array of strings
+ */
+function split(data, delimiter = ',', limit = undefined) {
+  return String(data).split(delimiter, limit);
+}
+
+/**
+ * Join array into string
+ * @param {array} data - Array to join
+ * @param {string} delimiter - Delimiter (default: ',')
+ * @returns {string} Joined string
+ */
+function join(data, delimiter = ',') {
+  return Array.isArray(data) ? data.join(delimiter) : String(data);
+}
+
+/**
+ * Reverse a string
+ * @param {string} data - String to reverse
+ * @returns {string} Reversed string
+ */
+function reverse(data) {
+  return String(data).split('').reverse().join('');
+}
+
+/**
+ * Repeat a string n times
+ * @param {string} data - String to repeat
+ * @param {number} count - Number of repetitions
+ * @returns {string} Repeated string
+ */
+function repeat(data, count) {
+  if (count < 0) throw new Error('Count must be non-negative');
+  return String(data).repeat(count);
+}
+
+/**
+ * Extract substring from string
+ * @param {string} data - Source string
+ * @param {number} start - Start index (0-based)
+ * @param {number} length - Length to extract (optional)
+ * @returns {string} Extracted substring
+ */
+function substring(data, start, length = undefined) {
+  const str = String(data);
+  if (length === undefined) {
+    return str.substring(start);
+  }
+  return str.substring(start, start + length);
+}
+
+/**
+ * Find index of substring
+ * @param {string} data - String to search in
+ * @param {string} search - Substring to find
+ * @param {boolean} fromEnd - Search from end (default: false)
+ * @returns {number} Index of substring, -1 if not found
+ */
+function indexOf(data, search, fromEnd = false) {
+  const str = String(data);
+  return fromEnd ? str.lastIndexOf(search) : str.indexOf(search);
+}
+
+/**
+ * Count occurrences of substring
+ * @param {string} data - String to search in
+ * @param {string} search - Substring to count
+ * @param {boolean} caseSensitive - Case sensitive (default: true)
+ * @returns {number} Number of occurrences
+ */
+function countOccurrences(data, search, caseSensitive = true) {
+  let str = String(data);
+  let needle = String(search);
+  if (!caseSensitive) {
+    str = str.toLowerCase();
+    needle = needle.toLowerCase();
+  }
+  return str.split(needle).length - 1;
+}
+
+/**
+ * Format a date/datetime string to a specified format
+ * @param {string} date - Date string or ISO date
+ * @param {string} format - Output format (e.g., 'YYYY-MM-DD', 'MM/DD/YYYY', 'DD-MMM-YYYY HH:mm:ss')
+ * @param {string} timezone - Optional timezone (default: UTC)
+ * @returns {string} Formatted date string
+ */
+function formatDate(date, format = 'YYYY-MM-DD', timezone = 'UTC') {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) throw new Error('Invalid date');
+  
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const fullMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const fullDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  
+  // Get date parts (use UTC by default for consistency)
+  const useUTC = timezone.toUpperCase() === 'UTC';
+  const year = useUTC ? d.getUTCFullYear() : d.getFullYear();
+  const month = useUTC ? d.getUTCMonth() : d.getMonth();
+  const day = useUTC ? d.getUTCDate() : d.getDate();
+  const weekday = useUTC ? d.getUTCDay() : d.getDay();
+  const hours = useUTC ? d.getUTCHours() : d.getHours();
+  const minutes = useUTC ? d.getUTCMinutes() : d.getMinutes();
+  const seconds = useUTC ? d.getUTCSeconds() : d.getSeconds();
+  const ms = useUTC ? d.getUTCMilliseconds() : d.getMilliseconds();
+  
+  const pad = (n, len = 2) => String(n).padStart(len, '0');
+  
+  const tokens = {
+    'YYYY': year,
+    'YY': String(year).slice(-2),
+    'MMMM': fullMonths[month],
+    'MMM': months[month],
+    'MM': pad(month + 1),
+    'M': month + 1,
+    'DDDD': fullDays[weekday],
+    'DDD': days[weekday],
+    'DD': pad(day),
+    'D': day,
+    'HH': pad(hours),
+    'H': hours,
+    'hh': pad(hours % 12 || 12),
+    'h': hours % 12 || 12,
+    'mm': pad(minutes),
+    'm': minutes,
+    'ss': pad(seconds),
+    's': seconds,
+    'SSS': pad(ms, 3),
+    'A': hours < 12 ? 'AM' : 'PM',
+    'a': hours < 12 ? 'am' : 'pm'
+  };
+  
+  // Replace tokens (longest first to avoid partial matches)
+  let result = format;
+  const sortedTokens = Object.keys(tokens).sort((a, b) => b.length - a.length);
+  for (const token of sortedTokens) {
+    result = result.replace(new RegExp(token, 'g'), tokens[token]);
+  }
+  
+  return result;
+}
+
+/**
+ * Parse date string to ISO format
+ * @param {string} dateStr - Date string in various formats
+ * @param {string} inputFormat - Input format hint (optional)
+ * @returns {string} ISO date string
+ */
+function parseDate(dateStr, inputFormat = null) {
+  // Try standard parsing first
+  let d = new Date(dateStr);
+  
+  // If invalid and format hint provided, try to parse with format
+  if (isNaN(d.getTime()) && inputFormat) {
+    // Common format patterns
+    const patterns = {
+      'DD/MM/YYYY': /^(\d{2})\/(\d{2})\/(\d{4})$/,
+      'MM/DD/YYYY': /^(\d{2})\/(\d{2})\/(\d{4})$/,
+      'DD-MM-YYYY': /^(\d{2})-(\d{2})-(\d{4})$/,
+      'YYYY/MM/DD': /^(\d{4})\/(\d{2})\/(\d{2})$/,
+      'YYYYMMDD': /^(\d{4})(\d{2})(\d{2})$/,
+      'YYYYMMDDHHmmss': /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/
+    };
+    
+    const pattern = patterns[inputFormat];
+    if (pattern) {
+      const match = dateStr.match(pattern);
+      if (match) {
+        if (inputFormat === 'DD/MM/YYYY' || inputFormat === 'DD-MM-YYYY') {
+          d = new Date(match[3], match[2] - 1, match[1]);
+        } else if (inputFormat === 'MM/DD/YYYY') {
+          d = new Date(match[3], match[1] - 1, match[2]);
+        } else if (inputFormat === 'YYYY/MM/DD' || inputFormat === 'YYYYMMDD') {
+          d = new Date(match[1], match[2] - 1, match[3]);
+        } else if (inputFormat === 'YYYYMMDDHHmmss') {
+          d = new Date(match[1], match[2] - 1, match[3], match[4], match[5], match[6]);
+        }
+      }
+    }
+  }
+  
+  if (isNaN(d.getTime())) throw new Error('Unable to parse date');
+  return d.toISOString();
+}
+
+/**
+ * Add/subtract time from a date
+ * @param {string} date - Date string
+ * @param {number} amount - Amount to add (negative to subtract)
+ * @param {string} unit - Time unit: 'years', 'months', 'days', 'hours', 'minutes', 'seconds'
+ * @returns {string} Modified date as ISO string
+ */
+function dateAdd(date, amount, unit = 'days') {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) throw new Error('Invalid date');
+  
+  switch (unit.toLowerCase()) {
+    case 'year':
+    case 'years':
+      d.setFullYear(d.getFullYear() + amount);
+      break;
+    case 'month':
+    case 'months':
+      d.setMonth(d.getMonth() + amount);
+      break;
+    case 'week':
+    case 'weeks':
+      d.setDate(d.getDate() + (amount * 7));
+      break;
+    case 'day':
+    case 'days':
+      d.setDate(d.getDate() + amount);
+      break;
+    case 'hour':
+    case 'hours':
+      d.setHours(d.getHours() + amount);
+      break;
+    case 'minute':
+    case 'minutes':
+      d.setMinutes(d.getMinutes() + amount);
+      break;
+    case 'second':
+    case 'seconds':
+      d.setSeconds(d.getSeconds() + amount);
+      break;
+    default:
+      throw new Error(`Unknown time unit: ${unit}`);
+  }
+  
+  return d.toISOString();
+}
+
+/**
+ * Calculate difference between two dates
+ * @param {string} date1 - First date
+ * @param {string} date2 - Second date
+ * @param {string} unit - Return unit: 'days', 'hours', 'minutes', 'seconds', 'milliseconds'
+ * @returns {number} Difference in specified unit
+ */
+function dateDiff(date1, date2, unit = 'days') {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+  if (isNaN(d1.getTime()) || isNaN(d2.getTime())) throw new Error('Invalid date');
+  
+  const diffMs = d2.getTime() - d1.getTime();
+  
+  switch (unit.toLowerCase()) {
+    case 'millisecond':
+    case 'milliseconds':
+    case 'ms':
+      return diffMs;
+    case 'second':
+    case 'seconds':
+      return Math.floor(diffMs / 1000);
+    case 'minute':
+    case 'minutes':
+      return Math.floor(diffMs / 60000);
+    case 'hour':
+    case 'hours':
+      return Math.floor(diffMs / 3600000);
+    case 'day':
+    case 'days':
+    default:
+      return Math.floor(diffMs / 86400000);
+  }
+}
+
+/**
+ * Calculate working days between two dates (excludes weekends)
+ * @param {string} startDate - Start date
+ * @param {string} endDate - End date
+ * @param {array} holidays - Array of holiday dates to exclude (optional)
+ * @returns {number} Number of working days
+ */
+function workingDays(startDate, endDate, holidays = []) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) throw new Error('Invalid date');
+  
+  // Normalize holidays to date strings
+  const holidaySet = new Set(holidays.map(h => {
+    const d = new Date(h);
+    return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+  }));
+  
+  let count = 0;
+  const current = new Date(start);
+  
+  while (current <= end) {
+    const dayOfWeek = current.getDay();
+    const dateKey = `${current.getFullYear()}-${current.getMonth()}-${current.getDate()}`;
+    
+    // Count if not weekend (0=Sun, 6=Sat) and not a holiday
+    if (dayOfWeek !== 0 && dayOfWeek !== 6 && !holidaySet.has(dateKey)) {
+      count++;
+    }
+    
+    current.setDate(current.getDate() + 1);
+  }
+  
+  return count;
+}
+
+/**
+ * Get current date/time in various formats
+ * @param {string} format - Output format (default: ISO)
+ * @param {string} timezone - Timezone (default: UTC)
+ * @returns {string} Current date/time
+ */
+function now(format = 'ISO', timezone = 'UTC') {
+  const d = new Date();
+  
+  if (format.toUpperCase() === 'ISO') {
+    return d.toISOString();
+  }
+  if (format === 'timestamp' || format === 'unix') {
+    return Math.floor(d.getTime() / 1000);
+  }
+  if (format === 'ms' || format === 'milliseconds') {
+    return d.getTime();
+  }
+  
+  return formatDate(d.toISOString(), format, timezone);
+}
+
+// ============================================================================
 // EXPORTS
 // ============================================================================
 
@@ -1699,6 +2146,29 @@ module.exports = {
   truncate,
   escapeRegex,
   pad,
+  toUpperCase,
+  toLowerCase,
+  stringLength,
+  trim,
+  replace,
+  contains,
+  startsWith,
+  endsWith,
+  split,
+  join,
+  reverse,
+  repeat,
+  substring,
+  indexOf,
+  countOccurrences,
+  
+  // Date/Time Utilities
+  formatDate,
+  parseDate,
+  dateAdd,
+  dateDiff,
+  workingDays,
+  now,
   
   // Validation
   validate,
