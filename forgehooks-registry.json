@@ -6,8 +6,14 @@
                      "url":  "https://github.com/danstoll/forgehooks-registry",
                      "maintainer":  "FlowForge Team"
                  },
-    "lastUpdated":  "2026-01-19T18:00:00Z",
+    "lastUpdated":  "2026-01-26T12:00:00Z",
     "packages":  {
+                     "qrcode-utils":  {
+                                          "version":  "1.0.0",
+                                          "file":  "packages/qrcode-utils-1.0.0.fhk",
+                                          "size":  "0KB",
+                                          "runtime":  "core"
+                                      },
                      "crypto-service":  {
                                             "version":  "1.0.0",
                                             "file":  "packages/crypto-service-1.0.0.fhk",
@@ -77,6 +83,75 @@
                                     }
                  },
     "plugins":  [
+                    {
+                        "id":  "qrcode-utils",
+                        "verified":  true,
+                        "featured":  true,
+                        "repository":  "https://github.com/danstoll/flowforge",
+                        "manifest":  {
+                                         "$schema":  "https://flowforge.dev/schemas/forgehook-v1.json",
+                                         "id":  "qrcode-utils",
+                                         "name":  "QR Code & Barcode Generator",
+                                         "version":  "1.0.0",
+                                         "description":  "Generate QR codes and barcodes (Code128, EAN-13, UPC-A) with multiple output formats (SVG, Base64 PNG, matrix). Pure TypeScript implementation - zero external dependencies. Built into FlowForge core.",
+                                         "author":  {
+                                                        "name":  "FlowForge Team",
+                                                        "url":  "https://flowforge.dev"
+                                                    },
+                                         "license":  "MIT",
+                                         "repository":  "https://github.com/danstoll/flowforge",
+                                         "icon":  "qr-code",
+                                         "category":  "utility",
+                                         "tags":  [
+                                                      "qrcode",
+                                                      "barcode",
+                                                      "code128",
+                                                      "ean13",
+                                                      "upca",
+                                                      "svg",
+                                                      "core",
+                                                      "built-in"
+                                                  ],
+                                         "runtime":  "core",
+                                         "basePath":  "/api/v1/utils",
+                                         "endpoints":  [
+                                                           {
+                                                               "method":  "POST",
+                                                               "path":  "/qr",
+                                                               "description":  "Generate QR code as SVG"
+                                                           },
+                                                           {
+                                                               "method":  "POST",
+                                                               "path":  "/qr/base64",
+                                                               "description":  "Generate QR code as Base64 PNG"
+                                                           },
+                                                           {
+                                                               "method":  "POST",
+                                                               "path":  "/qr/matrix",
+                                                               "description":  "Generate QR code as raw matrix"
+                                                           },
+                                                           {
+                                                               "method":  "POST",
+                                                               "path":  "/barcode/code128",
+                                                               "description":  "Generate Code128 barcode"
+                                                           },
+                                                           {
+                                                               "method":  "POST",
+                                                               "path":  "/barcode/ean13",
+                                                               "description":  "Generate EAN-13 barcode"
+                                                           },
+                                                           {
+                                                               "method":  "POST",
+                                                               "path":  "/barcode/upca",
+                                                               "description":  "Generate UPC-A barcode"
+                                                           }
+                                                       ],
+                                         "resources":  {
+                                                           "memory":  "0Mi",
+                                                           "cpu":  "0"
+                                                       }
+                                     }
+                    },
                     {
                         "id":  "string-utils",
                         "verified":  true,
